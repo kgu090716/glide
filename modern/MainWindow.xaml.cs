@@ -672,13 +672,19 @@ public sealed partial class MainWindow : Window
         var menu = (MenuFlyout)LanguageButton.Flyout;
         if (menu.Items.Count != 2 || !KoreanLanguageItem.IsChecked || !Equals(LanguageButton.Content, "한국어"))
             throw new Exception("The language picker did not start with two choices and the current language selected.");
+        var anchor = LanguageButton.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
+        var details = LanguageDetails.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
+        double buttonCenter = anchor.Y + LanguageButton.ActualHeight / 2;
+        double detailsCenter = details.Y + LanguageDetails.ActualHeight / 2;
+        if (anchor.X < details.X + LanguageDetails.ActualWidth || Math.Abs(buttonCenter - detailsCenter) > 2)
+            throw new Exception("The language button should be to the right of the description in the same row.");
         menu.ShowAt(LanguageButton);
         try
         {
             await Task.Delay(220);
-            var anchor = LanguageButton.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
             var item = EnglishLanguageItem.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
-            if (item.Y < anchor.Y + LanguageButton.ActualHeight - 2 || item.X > anchor.X + LanguageButton.ActualWidth)
+            if (item.Y < anchor.Y + LanguageButton.ActualHeight - 2 || item.X > anchor.X + LanguageButton.ActualWidth ||
+                item.X + EnglishLanguageItem.ActualWidth > Root.ActualWidth)
                 throw new Exception($"The language menu did not open below the button. Button {anchor}, item {item}.");
         }
         finally { menu.Hide(); }
