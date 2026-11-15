@@ -14,7 +14,7 @@
             <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                 <FontIcon Glyph="&#xE8B0;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                 <TextBlock Text="Glide" FontSize="13" FontWeight="SemiBold" />
-                <TextBlock Text="터치패드, 더 자연스럽게" FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="6,0,0,0" />
+                <TextBlock Text="{x:Bind Localize('Tagline')}" FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="6,0,0,0" />
             </StackPanel>
         </Grid>
         <ScrollViewer x:Name="SettingsScroll" Grid.Row="1" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" SizeChanged="SettingsSizeChanged">
@@ -23,8 +23,8 @@
                     <Grid Margin="0,4,0,4">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                         <StackPanel Spacing="8">
-                            <TextBlock Text="움직임을 더 가볍게." Style="{StaticResource TitleTextBlockStyle}" FontSize="28" />
-                            <TextBlock Text="어디를 잡아도, 세 손가락으로 창을 옮기세요." Style="{StaticResource MutedText}" FontSize="13" />
+                            <TextBlock Text="{x:Bind Localize('PageTitle')}" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" />
+                            <TextBlock Text="{x:Bind Localize('PageDescription')}" Style="{StaticResource MutedText}" FontSize="13" />
                         </StackPanel>
                         <Border Grid.Column="1" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="12" Width="52" Height="52" Margin="16,0,0,0">
                             <FontIcon Glyph="&#xE8B0;" FontSize="25" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
@@ -37,105 +37,121 @@
                             <StackPanel Spacing="6">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <Ellipse x:Name="StateDot" Width="8" Height="8" Fill="{ThemeResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
-                                    <TextBlock x:Name="StateTitle" Text="창 이동 준비 완료" FontSize="16" FontWeight="SemiBold" />
+                                    <TextBlock x:Name="StateTitle" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" />
                                 </StackPanel>
-                                <TextBlock x:Name="StateDescription" Text="커서를 원하는 창 위에 놓고 세 손가락을 움직이세요." Style="{StaticResource MutedText}" />
+                                <TextBlock x:Name="StateDescription" Style="{StaticResource MutedText}" />
                             </StackPanel>
-                            <ToggleSwitch x:Name="EnabledSwitch" Grid.Column="1" OnContent="사용 중" OffContent="일시정지" VerticalAlignment="Center" Toggled="EnabledChanged" AutomationProperties.Name="세 손가락 창 이동 사용" />
+                            <ToggleSwitch x:Name="EnabledSwitch" Grid.Column="1" OnContent="{x:Bind Localize('Enabled')}" OffContent="{x:Bind Localize('Paused')}" VerticalAlignment="Center" Toggled="EnabledChanged" AutomationProperties.Name="{x:Bind Localize('EnableDragging')}" />
                         </Grid>
                     </Border>
 
-                    <InfoBar x:Name="Notice" IsOpen="False" IsClosable="True" Severity="Informational" Title="안내" />
-                    <InfoBar x:Name="ElevationNotice" IsOpen="False" IsClosable="True" Severity="Warning" Title="이 창을 제어하려면 관리자 권한이 필요합니다" Message="작업 관리자에서 사용하려면 Glide를 관리자 권한으로 다시 시작하세요.">
-                        <InfoBar.ActionButton><Button x:Name="ElevationNoticeButton" Content="관리자 권한으로 다시 시작" Click="RestartElevatedClicked" /></InfoBar.ActionButton>
+                    <InfoBar x:Name="Notice" IsOpen="False" IsClosable="True" Severity="Informational" />
+                    <InfoBar x:Name="ElevationNotice" IsOpen="False" IsClosable="True" Severity="Warning" Title="{x:Bind Localize('ElevationNeeded')}" Message="{x:Bind Localize('ElevationHelp')}">
+                        <InfoBar.ActionButton><Button x:Name="ElevationNoticeButton" Content="{x:Bind Localize('RestartAsAdministrator')}" Click="RestartElevatedClicked" /></InfoBar.ActionButton>
                     </InfoBar>
 
+                    <Border Style="{StaticResource SettingsCard}">
+                        <Grid ColumnSpacing="20">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="{x:Bind Localize('Language')}" FontSize="14" FontWeight="SemiBold" />
+                                <TextBlock Text="{x:Bind Localize('LanguageDescription')}" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                            <ComboBox x:Name="LanguageCombo" Grid.Column="1" VerticalAlignment="Center"
+                                      AutomationProperties.Name="{x:Bind Localize('Language')}" SelectionChanged="LanguageChanged">
+                                <ComboBoxItem Content="{x:Bind Localize('WindowsLanguage')}" />
+                                <ComboBoxItem Content="English" />
+                                <ComboBoxItem Content="한국어" />
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+
                     <StackPanel Spacing="10">
-                        <TextBlock Text="드래그 설정" Style="{StaticResource SubtitleTextBlockStyle}" FontSize="16" />
+                        <TextBlock Text="{x:Bind Localize('DragSettings')}" Style="{StaticResource SubtitleTextBlockStyle}" FontSize="16" />
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="커서도 함께 이동" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="창 안에서 커서가 가리키던 위치를 유지합니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('FollowCursor')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('FollowCursorHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="FollowSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="FollowChanged" AutomationProperties.Name="커서도 함께 이동" />
+                                <ToggleSwitch x:Name="FollowSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="FollowChanged" AutomationProperties.Name="{x:Bind Localize('FollowCursor')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="드래그한 창을 앞으로" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="다른 창에서 제스처를 시작하면 앞으로 가져옵니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('RaiseWindow')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('RaiseWindowHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="RaiseSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="RaiseChanged" AutomationProperties.Name="드래그한 창을 앞으로" />
+                                <ToggleSwitch x:Name="RaiseSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="RaiseChanged" AutomationProperties.Name="{x:Bind Localize('RaiseWindow')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="상단 이동 제한 해제" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="제목 표시줄이 화면 위쪽을 지나도 계속 이동합니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('TopOverflow')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('TopOverflowHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="OverflowSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="OverflowChanged" AutomationProperties.Name="상단 이동 제한 해제" />
+                                <ToggleSwitch x:Name="OverflowSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="OverflowChanged" AutomationProperties.Name="{x:Bind Localize('TopOverflow')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="세 손가락으로 크기 조절" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="벌리면 커지고, 오므리면 작아집니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('PinchResize')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('PinchResizeHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="PinchSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="PinchChanged" AutomationProperties.Name="세 손가락으로 크기 조절" />
+                                <ToggleSwitch x:Name="PinchSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="PinchChanged" AutomationProperties.Name="{x:Bind Localize('PinchResize')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <StackPanel Spacing="10">
                                 <Grid>
                                     <StackPanel Spacing="5">
-                                        <TextBlock Text="이동 속도" FontSize="14" FontWeight="SemiBold" />
-                                        <TextBlock Text="손끝에 맞는 속도를 찾아보세요." Style="{StaticResource MutedText}" />
+                                        <TextBlock Text="{x:Bind Localize('DragSpeed')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{x:Bind Localize('DragSpeedHelp')}" Style="{StaticResource MutedText}" />
                                     </StackPanel>
                                     <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="10,5">
                                         <TextBlock x:Name="SpeedValue" Text="12 px/mm" FontWeight="SemiBold" FontSize="13" />
                                     </Border>
                                 </Grid>
-                                <Slider x:Name="SpeedSlider" Minimum="3" Maximum="36" StepFrequency="1" TickFrequency="3" TickPlacement="None" Value="12" ValueChanged="SpeedChanged" AutomationProperties.Name="창 이동 속도" />
-                                <Grid Margin="0,-8,0,0"><TextBlock Text="섬세하게" Style="{StaticResource MutedText}" /><TextBlock Text="빠르게" HorizontalAlignment="Right" Style="{StaticResource MutedText}" /></Grid>
+                                <Slider x:Name="SpeedSlider" Minimum="3" Maximum="36" StepFrequency="1" TickFrequency="3" TickPlacement="None" Value="12" ValueChanged="SpeedChanged" AutomationProperties.Name="{x:Bind Localize('DragSpeedName')}" />
+                                <Grid Margin="0,-8,0,0"><TextBlock Text="{x:Bind Localize('Slower')}" Style="{StaticResource MutedText}" /><TextBlock Text="{x:Bind Localize('Faster')}" HorizontalAlignment="Right" Style="{StaticResource MutedText}" /></Grid>
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="최대화된 창도 이동" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="원래 크기로 복원한 뒤 자연스럽게 옮깁니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('RestoreMaximized')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('RestoreMaximizedHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="RestoreSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="RestoreChanged" AutomationProperties.Name="최대화된 창 복원 이동" />
+                                <ToggleSwitch x:Name="RestoreSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="RestoreChanged" AutomationProperties.Name="{x:Bind Localize('RestoreMaximizedName')}" />
                             </Grid>
                         </Border>
                     </StackPanel>
 
                     <StackPanel x:Name="DirectionalOptions" Spacing="10">
-                        <TextBlock Text="방향별 크기 조절" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind Localize('DirectionalResize')}" FontSize="16" FontWeight="SemiBold" />
                         <Border Style="{StaticResource SettingsCard}">
                             <StackPanel Spacing="16">
                                 <Grid ColumnSpacing="24">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                     <StackPanel Spacing="5">
-                                        <TextBlock Text="상하좌우로 크기 조절" FontSize="14" FontWeight="SemiBold" />
-                                        <TextBlock Text="세 손가락을 가만히 올려둔 뒤 밀어 창의 테두리를 조절합니다." Style="{StaticResource MutedText}" />
+                                        <TextBlock Text="{x:Bind Localize('ResizeEdges')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{x:Bind Localize('ResizeEdgesHelp')}" Style="{StaticResource MutedText}" />
                                     </StackPanel>
-                                    <ToggleSwitch x:Name="DirectionalSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="DirectionalChanged" AutomationProperties.Name="상하좌우로 크기 조절" />
+                                    <ToggleSwitch x:Name="DirectionalSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="DirectionalChanged" AutomationProperties.Name="{x:Bind Localize('ResizeEdges')}" />
                                 </Grid>
                                 <StackPanel x:Name="DirectionalSettings" Spacing="14">
-                                    <NumberBox x:Name="ResizeHoldBox" Header="올려놓는 시간 (초)" SpinButtonPlacementMode="Inline" ValueChanged="ResizeHoldChanged" AutomationProperties.Name="크기 조절 대기 시간 초" />
-                                    <ComboBox x:Name="ResizeBehaviorCombo" Header="조절 방식" HorizontalAlignment="Stretch" SelectionChanged="ResizeBehaviorChanged" AutomationProperties.Name="방향별 크기 조절 방식">
-                                        <ComboBoxItem Content="미는 쪽으로 늘리기" />
-                                        <ComboBoxItem Content="위로 줄이고 아래로 늘리기" />
+                                    <NumberBox x:Name="ResizeHoldBox" Header="{x:Bind Localize('HoldTime')}" SpinButtonPlacementMode="Inline" ValueChanged="ResizeHoldChanged" AutomationProperties.Name="{x:Bind Localize('HoldTimeName')}" />
+                                    <ComboBox x:Name="ResizeBehaviorCombo" Header="{x:Bind Localize('ResizeMode')}" HorizontalAlignment="Stretch" SelectionChanged="ResizeBehaviorChanged" AutomationProperties.Name="{x:Bind Localize('ResizeModeName')}">
+                                        <ComboBoxItem Content="{x:Bind Localize('GrowInDirection')}" />
+                                        <ComboBoxItem Content="{x:Bind Localize('LowerCorners')}" />
                                     </ComboBox>
                                     <TextBlock x:Name="ResizeBehaviorDescription" Style="{StaticResource MutedText}" />
                                 </StackPanel>
@@ -144,25 +160,25 @@
                     </StackPanel>
 
                     <StackPanel x:Name="LayoutOptions" Spacing="10">
-                        <TextBlock Text="창 배치" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind Localize('Layout')}" FontSize="16" FontWeight="SemiBold" />
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="화면 상단에서 최대화" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="위쪽 끝으로 끌고 손가락을 떼면 최대화합니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('MaximizeAtTop')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('MaximizeAtTopHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="TopEdgeSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="TopEdgeChanged" AutomationProperties.Name="화면 상단에서 최대화" />
+                                <ToggleSwitch x:Name="TopEdgeSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="TopEdgeChanged" AutomationProperties.Name="{x:Bind Localize('MaximizeAtTop')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="화면 좌우에서 반쪽 배치" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="좌우 끝에서 놓으면 반쪽에, 다시 끌면 원래 크기로 돌아옵니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('SideSnap')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('SideSnapHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="SideSnapSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="SideSnapChanged" AutomationProperties.Name="화면 좌우에서 반쪽 배치" />
+                                <ToggleSwitch x:Name="SideSnapSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="SideSnapChanged" AutomationProperties.Name="{x:Bind Localize('SideSnap')}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SettingsCard}">
@@ -170,28 +186,28 @@
                                 <Grid ColumnSpacing="24">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                     <StackPanel Spacing="5">
-                                        <TextBlock Text="빠른 세 손가락으로 창 배치" FontSize="14" FontWeight="SemiBold" />
-                                        <TextBlock Text="0.35초 안에 밀고 떼세요. 위쪽(대각선 포함)은 최대화, 좌우는 반쪽 배치." Style="{StaticResource MutedText}" />
+                                        <TextBlock Text="{x:Bind Localize('Flick')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{x:Bind Localize('FlickHelp')}" Style="{StaticResource MutedText}" />
                                     </StackPanel>
-                                    <ToggleSwitch x:Name="FlickSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="FlickChanged" AutomationProperties.Name="빠른 세 손가락으로 창 배치" />
+                                    <ToggleSwitch x:Name="FlickSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="FlickChanged" AutomationProperties.Name="{x:Bind Localize('Flick')}" />
                                 </Grid>
                                 <StackPanel x:Name="FlickSensitivityPanel" Spacing="8">
-                                    <Grid><TextBlock Text="빠른 동작 민감도" FontSize="13" /><TextBlock x:Name="FlickSensitivityValue" Text="5 / 10" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" /></Grid>
-                                    <Slider x:Name="FlickSensitivitySlider" Minimum="1" Maximum="10" StepFrequency="1" Value="5" ValueChanged="FlickSensitivityChanged" AutomationProperties.Name="빠른 동작 민감도" />
-                                    <Grid Margin="0,-8,0,0"><TextBlock Text="더 빠르고 크게" Style="{StaticResource MutedText}" /><TextBlock Text="가벼운 동작으로" HorizontalAlignment="Right" Style="{StaticResource MutedText}" /></Grid>
+                                    <Grid><TextBlock Text="{x:Bind Localize('FlickSensitivity')}" FontSize="13" /><TextBlock x:Name="FlickSensitivityValue" Text="5 / 10" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" /></Grid>
+                                    <Slider x:Name="FlickSensitivitySlider" Minimum="1" Maximum="10" StepFrequency="1" Value="5" ValueChanged="FlickSensitivityChanged" AutomationProperties.Name="{x:Bind Localize('FlickSensitivity')}" />
+                                    <Grid Margin="0,-8,0,0"><TextBlock Text="{x:Bind Localize('FirmFlick')}" Style="{StaticResource MutedText}" /><TextBlock Text="{x:Bind Localize('GentleFlick')}" HorizontalAlignment="Right" Style="{StaticResource MutedText}" /></Grid>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
 
                     <StackPanel Spacing="10">
-                        <TextBlock Text="편의 기능" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind Localize('Convenience')}" FontSize="16" FontWeight="SemiBold" />
                         <Border Style="{StaticResource SettingsCard}">
                             <StackPanel Spacing="10">
-                                <TextBlock Text="작업 관리자와 관리자 권한 창" FontSize="14" FontWeight="SemiBold" />
-                                <TextBlock x:Name="AdministratorStatus" Text="관리자 권한으로 다시 시작하면 작업 관리자에서도 제스처를 사용할 수 있습니다. Windows 로그인 시 자동 시작은 일반 권한으로 실행됩니다." Style="{StaticResource MutedText}" />
+                                <TextBlock Text="{x:Bind Localize('AdministratorWindows')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock x:Name="AdministratorStatus" Style="{StaticResource MutedText}" />
                                 <Button x:Name="RestartElevatedButton" Click="RestartElevatedClicked" HorizontalAlignment="Left">
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xEA18;" FontSize="14" /><TextBlock Text="관리자 권한으로 다시 시작" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xEA18;" FontSize="14" /><TextBlock Text="{x:Bind Localize('RestartAsAdministrator')}" /></StackPanel>
                                 </Button>
                             </StackPanel>
                         </Border>
@@ -199,19 +215,19 @@
                             <Grid ColumnSpacing="24">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <StackPanel Spacing="5">
-                                    <TextBlock Text="Windows 로그인 시 자동 시작" FontSize="14" FontWeight="SemiBold" />
-                                    <TextBlock Text="설정 창을 띄우지 않고 트레이에서 시작합니다." Style="{StaticResource MutedText}" />
+                                    <TextBlock Text="{x:Bind Localize('StartAtSignIn')}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                    <TextBlock Text="{x:Bind Localize('StartAtSignInHelp')}" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <ToggleSwitch x:Name="StartupSwitch" Grid.Column="1" OnContent="켬" OffContent="끔" VerticalAlignment="Center" Toggled="StartupChanged" AutomationProperties.Name="Windows 로그인 시 자동 시작" />
+                                <ToggleSwitch x:Name="StartupSwitch" Grid.Column="1" OnContent="{x:Bind Localize('On')}" OffContent="{x:Bind Localize('Off')}" VerticalAlignment="Center" Toggled="StartupChanged" AutomationProperties.Name="{x:Bind Localize('StartAtSignIn')}" />
                             </Grid>
                         </Border>
                     </StackPanel>
 
                     <StackPanel Spacing="10">
                         <Grid>
-                            <TextBlock Text="터치패드" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Text="{x:Bind Localize('Touchpad')}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
                             <Button HorizontalAlignment="Right" Click="RefreshClicked" Style="{StaticResource SubtleButtonStyle}">
-                                <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" FontSize="14" /><TextBlock Text="다시 검색" /></StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" FontSize="14" /><TextBlock Text="{x:Bind Localize('ScanAgain')}" /></StackPanel>
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource SettingsCard}">
@@ -219,10 +235,10 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <Border Width="44" Height="44" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="10" VerticalAlignment="Center"><FontIcon Glyph="&#xEDA4;" FontSize="23" /></Border>
                                 <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
-                                    <TextBlock x:Name="DeviceTitle" Text="정밀 터치패드" FontWeight="SemiBold" FontSize="14" />
-                                    <TextBlock x:Name="DeviceDetail" Text="입력을 기다리는 중" Style="{StaticResource MutedText}" />
+                                    <TextBlock x:Name="DeviceTitle" FontWeight="SemiBold" FontSize="14" />
+                                    <TextBlock x:Name="DeviceDetail" Style="{StaticResource MutedText}" />
                                 </StackPanel>
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" ToolTipService.ToolTip="현재 인식된 손가락 수">
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Localize('FingerCountTip')}">
                                     <Ellipse x:Name="Finger1" Width="8" Height="8" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.24" />
                                     <Ellipse x:Name="Finger2" Width="8" Height="8" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.24" />
                                     <Ellipse x:Name="Finger3" Width="8" Height="8" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.24" />
@@ -235,12 +251,12 @@
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                             <FontIcon Glyph="&#xE765;" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="Ctrl + Alt + F9  일시정지 · Esc  이동 중지" Style="{StaticResource MutedText}" FontSize="12" />
+                            <TextBlock Text="{x:Bind Localize('ShortcutHint')}" Style="{StaticResource MutedText}" FontSize="12" />
                         </StackPanel>
-                        <Button Grid.Column="1" Click="HideClicked" Content="트레이로 숨기기" />
+                        <Button Grid.Column="1" Click="HideClicked" Content="{x:Bind Localize('HideToTray')}" />
                     </Grid>
                     <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,-8,0,0">
-                        <HyperlinkButton Click="DiagnosticClicked" Content="진단 정보 저장" Padding="0,4" />
+                        <HyperlinkButton Click="DiagnosticClicked" Content="{x:Bind Localize('SaveDiagnostics')}" Padding="0,4" />
                         <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                         <TextBlock x:Name="VersionText" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                     </StackPanel>

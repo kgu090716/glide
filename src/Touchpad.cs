@@ -10,6 +10,7 @@ namespace ThreeFingerWindowDrag
 {
     internal sealed class HidField
     {
+        internal const string OutOfRangeMessage = "터치패드가 범위를 벗어난 좌표를 보고했습니다.";
         public ushort Page, Usage, Link, Index;
         public byte Report;
         public bool Button;
@@ -26,7 +27,7 @@ namespace ThreeFingerWindowDrag
             else if (v.LogicalMin < 0 && v.BitSize == 32) signed = unchecked((int)raw);
             double range = (double)v.LogicalMax - v.LogicalMin;
             if (range <= 0 || signed < v.LogicalMin || signed > v.LogicalMax)
-                throw new InvalidOperationException("터치패드가 범위를 벗어난 좌표를 보고했습니다.");
+                throw new InvalidOperationException(OutOfRangeMessage);
             double physical = (double)v.PhysicalMax - v.PhysicalMin;
             int exponent = (int)(v.UnitsExp & 15);
             if (exponent >= 8) exponent -= 16;
@@ -84,6 +85,9 @@ namespace ThreeFingerWindowDrag
 
     internal sealed class TouchpadDevice : IDisposable
     {
+        internal const string NotPrecisionTouchpadMessage = "Not a precision touchpad.";
+        internal const string UnsupportedReportMessage = "이 터치패드의 접촉 보고서 형식은 지원되지 않습니다.";
+        internal const string ReportTooLongMessage = "HID report too long.";
         internal readonly IntPtr Handle;
         internal readonly string Name;
         internal Native.HidCaps Caps;
@@ -107,7 +111,7 @@ namespace ThreeFingerWindowDrag
             {
                 if (Native.GetRawInputDeviceInfo(handle, Native.RidiPreparsed, preparsed, ref size) == uint.MaxValue) throw new Win32Exception();
                 Check(Native.HidP_GetCaps(preparsed, out Caps));
-                if (Caps.Page != 0x0D || Caps.Usage != 0x05) throw new InvalidOperationException("Not a precision touchpad.");
+                if (Caps.Page != 0x0D || Caps.Usage != 0x05) throw new InvalidOperationException(NotPrecisionTouchpadMessage);
                 uint nameSize = 0;
                 Native.GetRawInputDeviceName(handle, Native.RidiName, null, ref nameSize);
                 StringBuilder name = new StringBuilder((int)nameSize + 1);
@@ -176,12 +180,12 @@ namespace ThreeFingerWindowDrag
                     Decoder.Slots.Add(slot);
             }
             if (Decoder.Slots.Count == 0 || Decoder.Counts.Count == 0 || Decoder.Scans.Count == 0)
-                throw new InvalidOperationException("이 터치패드의 접촉 보고서 형식은 지원되지 않습니다.");
+                throw new InvalidOperationException(UnsupportedReportMessage);
         }
         internal ContactFrame Parse(byte[] report, long now)
         {
             Reports++;
-            if (report.Length > padded.Length) { LastError = "HID report too long."; assembler.Reset(); return null; }
+            if (report.Length > padded.Length) { LastError = ReportTooLongMessage; assembler.Reset(); return null; }
             Array.Clear(padded, 0, padded.Length);
             Array.Copy(report, padded, report.Length);
             uint count = (uint)data.Length;
@@ -205,6 +209,9 @@ namespace ThreeFingerWindowDrag
 
     internal sealed class RawTouchpad : MessageWindow, IDisposable
     {
+        internal const string RegistrationErrorMessage = "터치패드 입력 등록에 실패했습니다.";
+        internal const string ReadDevicesErrorMessage = "장치 목록을 읽지 못했습니다.";
+        internal const string DeviceListChangedMessage = "장치 목록이 바뀌었습니다. 다시 검색해 주세요.";
         private readonly Dictionary<IntPtr, TouchpadDevice> devices = new Dictionary<IntPtr, TouchpadDevice>();
         private readonly HashSet<IntPtr> unsupported = new HashSet<IntPtr>();
         private readonly Stopwatch clock = Stopwatch.StartNew();
@@ -229,7 +236,7 @@ namespace ThreeFingerWindowDrag
             if (!Native.RegisterRawInputDevices(registration, 1, (uint)Marshal.SizeOf(typeof(Native.RawDevice))))
             {
                 DestroyHandle();
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "터치패드 입력 등록에 실패했습니다.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), RegistrationErrorMessage);
             }
             HotkeyRegistered = Native.RegisterHotKey(Handle, 1, 0x4000 | 0x0002 | 0x0001, 0x78); // Ctrl+Alt+F9
             RefreshDevices();
@@ -239,10 +246,10 @@ namespace ThreeFingerWindowDrag
             foreach (TouchpadDevice device in devices.Values) device.Dispose();
             devices.Clear(); unsupported.Clear(); LastError = null;
             uint count = 0, size = (uint)Marshal.SizeOf(typeof(Native.DeviceList));
-            if (Native.GetRawInputDeviceList(null, ref count, size) == uint.MaxValue) { LastError = "장치 목록을 읽지 못했습니다."; return; }
+            if (Native.GetRawInputDeviceList(null, ref count, size) == uint.MaxValue) { LastError = ReadDevicesErrorMessage; return; }
             Native.DeviceList[] list = new Native.DeviceList[count];
             uint result = Native.GetRawInputDeviceList(list, ref count, size);
-            if (result == uint.MaxValue) { LastError = "장치 목록이 바뀌었습니다. 다시 검색해 주세요."; return; }
+            if (result == uint.MaxValue) { LastError = DeviceListChangedMessage; return; }
             foreach (Native.DeviceList entry in list.Take((int)result))
                 if (entry.Type == 2) TryAdd(entry.Handle, false);
             ContactCount = 0; LastFrameTime = -1;
@@ -260,7 +267,7 @@ namespace ThreeFingerWindowDrag
             catch (Exception ex)
             {
                 unsupported.Add(handle);
-                if (reportErrors || ex.Message != "Not a precision touchpad.") LastError = ex.Message;
+                if (reportErrors || ex.Message != TouchpadDevice.NotPrecisionTouchpadMessage) LastError = ex.Message;
                 return null;
             }
         }

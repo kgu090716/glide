@@ -149,7 +149,7 @@ namespace ThreeFingerWindowDrag
                 reports += device.Reports;
                 if (error == null && !string.IsNullOrEmpty(device.LastError)) error = device.LastError;
             }
-            if (error == null && mover.Status.StartsWith("창 이동 실패:")) error = mover.Status;
+            if (error == null && mover.Status.StartsWith(WindowMover.FailurePrefix, StringComparison.Ordinal)) error = mover.Status;
             if (error == null && mover.ElevationRequired) error = ElevationSupport.RequiredMessage;
             Volatile.Write(ref state, new InputState {
                 Enabled = engine.Enabled, Dragging = engine.Dragging, Hotkey = input.HotkeyRegistered, TopEdgeArmed = mover.TopEdgeArmed,

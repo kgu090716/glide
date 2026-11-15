@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Tagline" xml:space="preserve"><value>터치패드, 더 자연스럽게</value></data>
+  <data name="PageTitle" xml:space="preserve"><value>움직임을 더 가볍게.</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>어디를 잡아도, 세 손가락으로 창을 옮기세요.</value></data>
+  <data name="Enabled" xml:space="preserve"><value>사용 중</value></data>
+  <data name="Paused" xml:space="preserve"><value>일시정지</value></data>
+  <data name="EnableDragging" xml:space="preserve"><value>세 손가락 창 이동 사용</value></data>
+  <data name="On" xml:space="preserve"><value>켬</value></data>
+  <data name="Off" xml:space="preserve"><value>끔</value></data>
+  <data name="ElevationNeeded" xml:space="preserve"><value>이 창을 제어하려면 관리자 권한이 필요합니다</value></data>
+  <data name="ElevationHelp" xml:space="preserve"><value>작업 관리자에서 사용하려면 Glide를 관리자 권한으로 다시 시작하세요.</value></data>
+  <data name="RestartAsAdministrator" xml:space="preserve"><value>관리자 권한으로 다시 시작</value></data>
+  <data name="Language" xml:space="preserve"><value>언어</value></data>
+  <data name="LanguageDescription" xml:space="preserve"><value>Glide의 화면과 트레이 메뉴에 사용할 언어를 선택합니다.</value></data>
+  <data name="WindowsLanguage" xml:space="preserve"><value>Windows 언어 사용</value></data>
+  <data name="DragSettings" xml:space="preserve"><value>드래그 설정</value></data>
+  <data name="FollowCursor" xml:space="preserve"><value>커서도 함께 이동</value></data>
+  <data name="FollowCursorHelp" xml:space="preserve"><value>창 안에서 커서가 가리키던 위치를 유지합니다.</value></data>
+  <data name="RaiseWindow" xml:space="preserve"><value>드래그한 창을 앞으로</value></data>
+  <data name="RaiseWindowHelp" xml:space="preserve"><value>다른 창에서 제스처를 시작하면 앞으로 가져옵니다.</value></data>
+  <data name="TopOverflow" xml:space="preserve"><value>상단 이동 제한 해제</value></data>
+  <data name="TopOverflowHelp" xml:space="preserve"><value>제목 표시줄이 화면 위쪽을 지나도 계속 이동합니다.</value></data>
+  <data name="PinchResize" xml:space="preserve"><value>세 손가락으로 크기 조절</value></data>
+  <data name="PinchResizeHelp" xml:space="preserve"><value>벌리면 커지고, 오므리면 작아집니다.</value></data>
+  <data name="DragSpeed" xml:space="preserve"><value>이동 속도</value></data>
+  <data name="DragSpeedHelp" xml:space="preserve"><value>손끝에 맞는 속도를 찾아보세요.</value></data>
+  <data name="DragSpeedName" xml:space="preserve"><value>창 이동 속도</value></data>
+  <data name="Slower" xml:space="preserve"><value>섬세하게</value></data>
+  <data name="Faster" xml:space="preserve"><value>빠르게</value></data>
+  <data name="RestoreMaximized" xml:space="preserve"><value>최대화된 창도 이동</value></data>
+  <data name="RestoreMaximizedHelp" xml:space="preserve"><value>원래 크기로 복원한 뒤 자연스럽게 옮깁니다.</value></data>
+  <data name="RestoreMaximizedName" xml:space="preserve"><value>최대화된 창 복원 이동</value></data>
+  <data name="DirectionalResize" xml:space="preserve"><value>방향별 크기 조절</value></data>
+  <data name="ResizeEdges" xml:space="preserve"><value>상하좌우로 크기 조절</value></data>
+  <data name="ResizeEdgesHelp" xml:space="preserve"><value>세 손가락을 가만히 올려둔 뒤 밀어 창의 테두리를 조절합니다.</value></data>
+  <data name="HoldTime" xml:space="preserve"><value>올려놓는 시간 (초)</value></data>
+  <data name="HoldTimeName" xml:space="preserve"><value>크기 조절 대기 시간 초</value></data>
+  <data name="ResizeMode" xml:space="preserve"><value>조절 방식</value></data>
+  <data name="ResizeModeName" xml:space="preserve"><value>방향별 크기 조절 방식</value></data>
+  <data name="GrowInDirection" xml:space="preserve"><value>미는 쪽으로 늘리기</value></data>
+  <data name="LowerCorners" xml:space="preserve"><value>위로 줄이고 아래로 늘리기</value></data>
+  <data name="Layout" xml:space="preserve"><value>창 배치</value></data>
+  <data name="MaximizeAtTop" xml:space="preserve"><value>화면 상단에서 최대화</value></data>
+  <data name="MaximizeAtTopHelp" xml:space="preserve"><value>위쪽 끝으로 끌고 손가락을 떼면 최대화합니다.</value></data>
+  <data name="SideSnap" xml:space="preserve"><value>화면 좌우에서 반쪽 배치</value></data>
+  <data name="SideSnapHelp" xml:space="preserve"><value>좌우 끝에서 놓으면 반쪽에, 다시 끌면 원래 크기로 돌아옵니다.</value></data>
+  <data name="Flick" xml:space="preserve"><value>빠른 세 손가락으로 창 배치</value></data>
+  <data name="FlickHelp" xml:space="preserve"><value>0.35초 안에 밀고 떼세요. 위쪽(대각선 포함)은 최대화, 좌우는 반쪽 배치.</value></data>
+  <data name="FlickSensitivity" xml:space="preserve"><value>빠른 동작 민감도</value></data>
+  <data name="FirmFlick" xml:space="preserve"><value>더 빠르고 크게</value></data>
+  <data name="GentleFlick" xml:space="preserve"><value>가벼운 동작으로</value></data>
+  <data name="Convenience" xml:space="preserve"><value>편의 기능</value></data>
+  <data name="AdministratorWindows" xml:space="preserve"><value>작업 관리자와 관리자 권한 창</value></data>
+  <data name="AdministratorHelp" xml:space="preserve"><value>관리자 권한으로 다시 시작하면 작업 관리자에서도 제스처를 사용할 수 있습니다. Windows 로그인 시 자동 시작은 일반 권한으로 실행됩니다.</value></data>
+  <data name="AdministratorActive" xml:space="preserve"><value>관리자 권한으로 실행 중입니다. 작업 관리자와 관리자 권한 창에서도 제스처를 사용할 수 있습니다.</value></data>
+  <data name="StartAtSignIn" xml:space="preserve"><value>Windows 로그인 시 자동 시작</value></data>
+  <data name="StartAtSignInHelp" xml:space="preserve"><value>설정 창을 띄우지 않고 트레이에서 시작합니다.</value></data>
+  <data name="Touchpad" xml:space="preserve"><value>터치패드</value></data>
+  <data name="ScanAgain" xml:space="preserve"><value>다시 검색</value></data>
+  <data name="FingerCountTip" xml:space="preserve"><value>현재 인식된 손가락 수</value></data>
+  <data name="ShortcutHint" xml:space="preserve"><value>Ctrl + Alt + F9  일시정지 · Esc  이동 중지</value></data>
+  <data name="HideToTray" xml:space="preserve"><value>트레이로 숨기기</value></data>
+  <data name="SaveDiagnostics" xml:space="preserve"><value>진단 정보 저장</value></data>
+  <data name="StartupReadFailed" xml:space="preserve"><value>자동 시작 설정을 읽지 못했습니다</value></data>
+  <data name="HotkeyFailed" xml:space="preserve"><value>단축키를 등록하지 못했습니다</value></data>
+  <data name="HotkeyHelp" xml:space="preserve"><value>사용 전환은 위의 토글이나 트레이 메뉴에서 할 수 있습니다.</value></data>
+  <data name="RestartProcessFailed" xml:space="preserve"><value>새 창을 실행하지 못했습니다.</value></data>
+  <data name="RestartFailed" xml:space="preserve"><value>다시 시작하지 못했습니다</value></data>
+  <data name="RestartStillRunning" xml:space="preserve"><value>현재 Glide는 계속 실행 중입니다. 다시 시도해 주세요.</value></data>
+  <data name="RestartCancelled" xml:space="preserve"><value>현재 권한으로 계속 실행합니다</value></data>
+  <data name="ElevationCancelled" xml:space="preserve"><value>관리자 권한 요청을 취소했습니다.</value></data>
+  <data name="ElevationFailed" xml:space="preserve"><value>관리자 권한으로 다시 시작하지 못했습니다</value></data>
+  <data name="StartupChangeFailed" xml:space="preserve"><value>자동 시작 설정을 변경하지 못했습니다</value></data>
+  <data name="LowerCornersHelp" xml:space="preserve"><value>↖ 우하단에서 축소 · ↗ 좌하단에서 축소&#10;↙ 좌하단으로 확대 · ↘ 우하단으로 확대</value></data>
+  <data name="GrowInDirectionHelp" xml:space="preserve"><value>처음 미는 방향의 테두리가 늘어나고, 반대로 당기면 줄어듭니다.</value></data>
+  <data name="WelcomeIntro" xml:space="preserve"><value>Windows 기본 제스처를 꺼두면 Glide와 겹치지 않습니다.</value></data>
+  <data name="WelcomeSteps" xml:space="preserve"><value>Windows 설정 → 터치패드 → 세 손가락 제스처에서 ‘살짝 밀기’와 ‘탭’을 모두 ‘아무 작업 안 함’으로 바꿔 주세요.</value></data>
+  <data name="OpenTouchpadSettings" xml:space="preserve"><value>터치패드 설정 열기</value></data>
+  <data name="WelcomeOnce" xml:space="preserve"><value>이 안내는 처음 한 번만 표시됩니다.</value></data>
+  <data name="WelcomeTitle" xml:space="preserve"><value>Glide를 시작하기 전에</value></data>
+  <data name="GetStarted" xml:space="preserve"><value>시작하기</value></data>
+  <data name="Close" xml:space="preserve"><value>닫기</value></data>
+  <data name="SaveSettingsFailed" xml:space="preserve"><value>설정을 저장하지 못했습니다</value></data>
+  <data name="StateResizing" xml:space="preserve"><value>손끝을 따라 크기 조절 중</value></data>
+  <data name="StateResizeReady" xml:space="preserve"><value>크기 조절 준비 완료</value></data>
+  <data name="StateDragging" xml:space="preserve"><value>손끝을 따라 이동 중</value></data>
+  <data name="StateReady" xml:space="preserve"><value>창 이동 준비 완료</value></data>
+  <data name="StatePaused" xml:space="preserve"><value>잠시 쉬어가는 중</value></data>
+  <data name="StateLowerCorners" xml:space="preserve"><value>아래 모서리를 움직입니다. 위로 밀면 줄어들고 아래로 밀면 커집니다.</value></data>
+  <data name="StateGrowInDirection" xml:space="preserve"><value>처음 미는 방향의 테두리를 조절합니다. 반대로 당기면 줄어듭니다.</value></data>
+  <data name="StateResizeHint" xml:space="preserve"><value>이제 상하좌우로 밀어 창 크기를 조절하세요.</value></data>
+  <data name="StateSnapLeft" xml:space="preserve"><value>손가락을 떼면 왼쪽 반쪽에 배치합니다.</value></data>
+  <data name="StateSnapRight" xml:space="preserve"><value>손가락을 떼면 오른쪽 반쪽에 배치합니다.</value></data>
+  <data name="StateMaximize" xml:space="preserve"><value>손가락을 떼면 창을 최대화합니다.</value></data>
+  <data name="StatePinchHint" xml:space="preserve"><value>세 손가락을 벌리거나 오므려 크기를 조절하세요.</value></data>
+  <data name="StateDragHint" xml:space="preserve"><value>손가락을 떼면 그 자리에 멈춥니다.</value></data>
+  <data name="StateReadyHint" xml:space="preserve"><value>커서를 원하는 창 위에 놓고 세 손가락을 움직이세요.</value></data>
+  <data name="StatePausedHint" xml:space="preserve"><value>다시 켜면 세 손가락으로 창을 옮길 수 있습니다.</value></data>
+  <data name="TouchpadConnected" xml:space="preserve"><value>정밀 터치패드 연결됨</value></data>
+  <data name="TouchpadMissing" xml:space="preserve"><value>정밀 터치패드를 찾지 못했습니다</value></data>
+  <data name="TouchpadCounts" xml:space="preserve"><value>{0}개 장치 · 손가락 {1}개 감지 · 입력 {2:N0}회</value></data>
+  <data name="TouchpadMissingHelp" xml:space="preserve"><value>연결 상태를 확인한 뒤 다시 검색해 주세요.</value></data>
+  <data name="OpenSettingsFailed" xml:space="preserve"><value>Windows 설정을 열지 못했습니다</value></data>
+  <data name="TextFile" xml:space="preserve"><value>텍스트 파일</value></data>
+  <data name="DiagnosticsSaved" xml:space="preserve"><value>진단 정보를 저장했습니다</value></data>
+  <data name="DiagnosticsFailed" xml:space="preserve"><value>진단 정보를 저장하지 못했습니다</value></data>
+  <data name="TrayTooltip" xml:space="preserve"><value>Glide · 세 손가락 창 이동</value></data>
+  <data name="TrayOpen" xml:space="preserve"><value>Glide 열기</value></data>
+  <data name="TrayToggle" xml:space="preserve"><value>창 이동 사용</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>종료</value></data>
+  <data name="InputElevationRequired" xml:space="preserve"><value>작업 관리자처럼 관리자 권한으로 실행된 창입니다. Glide를 관리자 권한으로 다시 시작해 주세요.</value></data>
+  <data name="InputMoveFailed" xml:space="preserve"><value>창 이동 실패</value></data>
+  <data name="InputOutOfRange" xml:space="preserve"><value>터치패드가 범위를 벗어난 좌표를 보고했습니다.</value></data>
+  <data name="InputUnsupportedReport" xml:space="preserve"><value>이 터치패드의 접촉 보고서 형식은 지원되지 않습니다.</value></data>
+  <data name="InputRegistrationFailed" xml:space="preserve"><value>터치패드 입력 등록에 실패했습니다.</value></data>
+  <data name="InputReadDevicesFailed" xml:space="preserve"><value>장치 목록을 읽지 못했습니다.</value></data>
+  <data name="InputDeviceListChanged" xml:space="preserve"><value>장치 목록이 바뀌었습니다. 다시 검색해 주세요.</value></data>
+  <data name="InputReportTooLong" xml:space="preserve"><value>HID 보고서가 너무 깁니다.</value></data>
+  <data name="InputNotPrecisionTouchpad" xml:space="preserve"><value>정밀 터치패드가 아닙니다.</value></data>
+</root>

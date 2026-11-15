@@ -8,20 +8,27 @@ internal sealed class TrayIcon : MessageWindow, IDisposable
     private const int Callback = 0x8000 + 17;
     private Native.NotifyData data;
     private readonly IntPtr owner;
+    private readonly Func<string, string> localize;
     private IntPtr icon;
     internal event Action Open, Toggle, Exit;
     internal bool Enabled;
-    internal TrayIcon(IntPtr window)
+    internal TrayIcon(IntPtr window, Func<string, string> localize)
     {
         owner = window;
+        this.localize = localize;
         CreateHandle("Glide.Tray");
         icon = Native.LoadImage(IntPtr.Zero, Path.Combine(AppContext.BaseDirectory, "Assets", "Glide.ico"), 1, 32, 32, 0x10);
         if (icon == IntPtr.Zero) icon = Native.LoadIcon(IntPtr.Zero, new IntPtr(32512));
         data = new Native.NotifyData {
             Size = (uint)Marshal.SizeOf<Native.NotifyData>(), Window = Handle, Id = 1,
-            Flags = 1 | 2 | 4, Callback = Callback, Icon = icon, Tip = "Glide · 세 손가락 창 이동"
+            Flags = 1 | 2 | 4, Callback = Callback, Icon = icon, Tip = localize("TrayTooltip")
         };
         Native.ShellNotifyIcon(0, ref data);
+    }
+    internal void RefreshLanguage()
+    {
+        data.Tip = localize("TrayTooltip");
+        Native.ShellNotifyIcon(1, ref data);
     }
     protected override void WndProc(ref NativeMessage message)
     {
@@ -36,10 +43,10 @@ internal sealed class TrayIcon : MessageWindow, IDisposable
     private void ShowMenu()
     {
         IntPtr menu = Native.CreatePopupMenu();
-        Native.AppendMenu(menu, 0, new UIntPtr(1), "Glide 열기");
-        Native.AppendMenu(menu, Enabled ? 8u : 0u, new UIntPtr(2), "창 이동 사용");
+        Native.AppendMenu(menu, 0, new UIntPtr(1), localize("TrayOpen"));
+        Native.AppendMenu(menu, Enabled ? 8u : 0u, new UIntPtr(2), localize("TrayToggle"));
         Native.AppendMenu(menu, 0x800, UIntPtr.Zero, null);
-        Native.AppendMenu(menu, 0, new UIntPtr(3), "종료");
+        Native.AppendMenu(menu, 0, new UIntPtr(3), localize("TrayExit"));
         Native.GetCursorPos(out Native.Point position);
         Native.SetForegroundWindow(owner);
         uint result = Native.TrackPopupMenuEx(menu, 0x100 | 2, position.X, position.Y, owner, IntPtr.Zero);

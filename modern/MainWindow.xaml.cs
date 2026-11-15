@@ -7,6 +7,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Diagnostics;
+using System.Globalization;
+using System.Resources;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -21,7 +23,9 @@ namespace ThreeFingerWindowDrag;
 public sealed partial class MainWindow : Window
 {
     internal const string NativeTitle = "Glide · 세 손가락 창 이동";
+    internal const string EnglishWindowTitle = "Glide · Three-finger window control";
     private static readonly string AppVersion = typeof(MainWindow).Assembly.GetName().Version.ToString(3);
+    private static readonly ResourceManager TextResources = new("ThreeFingerWindowDrag.TextResources", typeof(MainWindow).Assembly);
     internal const uint ShowMessage = 0x8000 + 27;
     internal const uint QuitMessage = 0x8000 + 28;
     private readonly StartupRegistration startup = new();
@@ -33,6 +37,8 @@ public sealed partial class MainWindow : Window
     private readonly IntPtr hwnd;
     private readonly bool smoke;
     private bool ready, exiting, welcomeStarted, normalizingResizeHold;
+    private CultureInfo uiCulture;
+    private (string TitleKey, string Message, bool LocalizeMessage) noticeText;
     private ContentDialog welcomeDialog;
     private InputState renderedState;
     private bool renderedEnabled;
@@ -41,11 +47,13 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         smoke = Environment.GetCommandLineArgs().Contains("--smoke-test");
-        settings = smoke ? new Settings { SetupDone = !Environment.GetCommandLineArgs().Contains("--first-run") } : Settings.Load();
+        settings = smoke ? new Settings { SetupDone = !Environment.GetCommandLineArgs().Contains("--first-run"), Language = AppLanguage.Korean } : Settings.Load();
         NeedsWelcome = settings.NeedsWelcome;
+        uiCulture = ResolveCulture(settings.Language);
         InitializeComponent();
+        LanguageCombo.SelectedIndex = (int)settings.Language;
         VersionText.Text = $"Glide {AppVersion} · WinUI 3";
-        Title = NativeTitle;
+        ApplyWindowLanguage();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(TitleBar);
         SystemBackdrop = new MicaBackdrop { Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt };
@@ -55,7 +63,6 @@ public sealed partial class MainWindow : Window
             // Only pointer-free show/quit messages are accepted from the normal installer/launcher.
             Native.ChangeWindowMessageFilterEx(hwnd, ShowMessage, 1, IntPtr.Zero);
             Native.ChangeWindowMessageFilterEx(hwnd, QuitMessage, 1, IntPtr.Zero);
-            AdministratorStatus.Text = "관리자 권한으로 실행 중입니다. 작업 관리자와 관리자 권한 창에서도 제스처를 사용할 수 있습니다.";
             RestartElevatedButton.IsEnabled = false;
         }
         subclass = WindowMessage;
@@ -73,7 +80,7 @@ public sealed partial class MainWindow : Window
         controller = new InputController(!NeedsWelcome && !smoke, settings.Speed, settings.FollowCursor, settings.RestoreMaximized,
             settings.MaximizeAtTop, settings.BringToFront, settings.AllowTopOverflow, settings.PinchResize,
             settings.SnapAtSides, settings.FlickGestures, settings.FlickSensitivity, settings.ResizeOptions);
-        tray = new TrayIcon(hwnd);
+        tray = new TrayIcon(hwnd, Localize);
         tray.Open += ShowWindow;
         tray.Toggle += ToggleEnabled;
         tray.Exit += ExitApp;
@@ -100,12 +107,12 @@ public sealed partial class MainWindow : Window
         ResizeBehaviorCombo.SelectedIndex = (int)settings.ResizeBehavior;
         UpdateResizeControls();
         try { StartupSwitch.IsOn = !smoke && startup.IsEnabled(Environment.ProcessPath); }
-        catch (Exception ex) { ShowNotice("자동 시작 설정을 읽지 못했습니다", ex.Message, InfoBarSeverity.Warning); }
+        catch (Exception ex) { ShowNotice("StartupReadFailed", ex.Message, InfoBarSeverity.Warning); }
         SpeedSlider.Value = settings.Speed;
         SpeedValue.Text = settings.Speed + " px/mm";
         EnabledSwitch.IsOn = !NeedsWelcome;
         ready = true;
-        if (!controller.State.Hotkey) ShowNotice("단축키를 등록하지 못했습니다", "사용 전환은 위의 토글이나 트레이 메뉴에서 할 수 있습니다.", InfoBarSeverity.Informational);
+        if (!controller.State.Hotkey) ShowNotice("HotkeyFailed", "HotkeyHelp", InfoBarSeverity.Informational, localizeMessage: true);
         timer = DispatcherQueue.CreateTimer();
         timer.Interval = TimeSpan.FromMilliseconds(150);
         timer.Tick += (_, _) => { if (timer.IsRunning) UpdateStatus(); };
@@ -115,6 +122,46 @@ public sealed partial class MainWindow : Window
         UpdateStatus();
         if (smoke) Root.Loaded += async (_, _) => await RunSmokeTestAsync();
         else if (NeedsWelcome) Root.Loaded += async (_, _) => await ShowWelcomeAsync();
+    }
+
+    private static CultureInfo ResolveCulture(AppLanguage language)
+    {
+        bool korean = language == AppLanguage.Korean ||
+            (language == AppLanguage.System && CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ko");
+        return CultureInfo.GetCultureInfo(korean ? "ko-KR" : "en-US");
+    }
+
+    private string Localize(string key) => TextResources.GetString(key, uiCulture);
+
+    internal static IntPtr FindRunningWindow()
+    {
+        IntPtr englishWindow = Native.FindWindow(null, EnglishWindowTitle);
+        return englishWindow != IntPtr.Zero ? englishWindow : Native.FindWindow(null, NativeTitle);
+    }
+
+    private void ApplyWindowLanguage()
+    {
+        Root.Language = uiCulture.Name;
+        string title = uiCulture.TwoLetterISOLanguageName == "ko" ? NativeTitle : EnglishWindowTitle;
+        Title = smoke ? title + " (Test)" : title;
+        AdministratorStatus.Text = Localize(ElevationSupport.IsElevated ? "AdministratorActive" : "AdministratorHelp");
+    }
+
+    private void LanguageChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!ready || LanguageCombo.SelectedIndex < 0) return;
+        var language = (AppLanguage)LanguageCombo.SelectedIndex;
+        if (settings.Language == language) return;
+        settings.Language = language;
+        uiCulture = ResolveCulture(language);
+        ApplyWindowLanguage();
+        Bindings.Update();
+        tray.RefreshLanguage();
+        UpdateResizeControls();
+        if (Notice.IsOpen) UpdateNoticeText();
+        renderedState = null;
+        UpdateStatus();
+        SaveSettings();
     }
     private IntPtr WindowMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam, UIntPtr id, IntPtr data)
     {
@@ -149,13 +196,13 @@ public sealed partial class MainWindow : Window
         try
         {
             using Process replacement = await Task.Run(() => Process.Start(ElevationSupport.RestartInfo(Environment.ProcessPath, Environment.ProcessId)));
-            if (replacement == null) throw new InvalidOperationException("새 창을 실행하지 못했습니다.");
+            if (replacement == null) throw new InvalidOperationException(Localize("RestartProcessFailed"));
             await Task.Delay(1500);
-            if (!exiting && replacement.HasExited) ShowNotice("다시 시작하지 못했습니다", "현재 Glide는 계속 실행 중입니다. 다시 시도해 주세요.", InfoBarSeverity.Warning);
+            if (!exiting && replacement.HasExited) ShowNotice("RestartFailed", "RestartStillRunning", InfoBarSeverity.Warning, localizeMessage: true);
         }
         catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
-        { ShowNotice("현재 권한으로 계속 실행합니다", "관리자 권한 요청을 취소했습니다.", InfoBarSeverity.Informational); }
-        catch (Exception ex) { ShowNotice("관리자 권한으로 다시 시작하지 못했습니다", ex.Message, InfoBarSeverity.Error); }
+        { ShowNotice("RestartCancelled", "ElevationCancelled", InfoBarSeverity.Informational, localizeMessage: true); }
+        catch (Exception ex) { ShowNotice("ElevationFailed", ex.Message, InfoBarSeverity.Error); }
         finally { if (!exiting) RestartElevatedButton.IsEnabled = ElevationNoticeButton.IsEnabled = true; }
     }
     private void DisposeInput()
@@ -195,7 +242,7 @@ public sealed partial class MainWindow : Window
             ready = false;
             StartupSwitch.IsOn = !StartupSwitch.IsOn;
             ready = true;
-            ShowNotice("자동 시작 설정을 변경하지 못했습니다", ex.Message, InfoBarSeverity.Error);
+            ShowNotice("StartupChangeFailed", ex.Message, InfoBarSeverity.Error);
         }
     }
     private void SideSnapChanged(object sender, RoutedEventArgs e)
@@ -266,8 +313,8 @@ public sealed partial class MainWindow : Window
         ResizeBehaviorCombo.IsEnabled = settings.DirectionalResize;
         DirectionalSettings.Opacity = settings.DirectionalResize ? 1 : 0.5;
         ResizeBehaviorDescription.Text = settings.ResizeBehavior == ResizeBehavior.LowerCorners
-            ? "↖ 우하단에서 축소 · ↗ 좌하단에서 축소\n↙ 좌하단으로 확대 · ↘ 우하단으로 확대"
-            : "처음 미는 방향의 테두리가 늘어나고, 반대로 당기면 줄어듭니다.";
+            ? Localize("LowerCornersHelp")
+            : Localize("GrowInDirectionHelp");
     }
     private void ResizeBehaviorChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -278,12 +325,12 @@ public sealed partial class MainWindow : Window
     private ContentDialog CreateWelcomeDialog()
     {
         var content = new StackPanel { Spacing = 16 };
-        content.Children.Add(new TextBlock { Text = "Windows 기본 제스처를 꺼두면 Glide와 겹치지 않습니다.", TextWrapping = TextWrapping.Wrap });
-        content.Children.Add(new TextBlock { Text = "Windows 설정 → 터치패드 → 세 손가락 제스처에서 ‘살짝 밀기’와 ‘탭’을 모두 ‘아무 작업 안 함’으로 바꿔 주세요.", TextWrapping = TextWrapping.Wrap });
-        var button = new Button { Content = "터치패드 설정 열기" }; button.Click += OpenSettingsClicked; content.Children.Add(button);
-        content.Children.Add(new TextBlock { Text = "이 안내는 처음 한 번만 표시됩니다.", TextWrapping = TextWrapping.Wrap, FontSize = 12 });
-        return new ContentDialog { XamlRoot = Root.XamlRoot, Title = "Glide를 시작하기 전에", Content = content,
-            PrimaryButtonText = "시작하기", CloseButtonText = "닫기", DefaultButton = ContentDialogButton.Primary };
+        content.Children.Add(new TextBlock { Text = Localize("WelcomeIntro"), TextWrapping = TextWrapping.Wrap });
+        content.Children.Add(new TextBlock { Text = Localize("WelcomeSteps"), TextWrapping = TextWrapping.Wrap });
+        var button = new Button { Content = Localize("OpenTouchpadSettings") }; button.Click += OpenSettingsClicked; content.Children.Add(button);
+        content.Children.Add(new TextBlock { Text = Localize("WelcomeOnce"), TextWrapping = TextWrapping.Wrap, FontSize = 12 });
+        return new ContentDialog { XamlRoot = Root.XamlRoot, Language = uiCulture.Name, Title = Localize("WelcomeTitle"), Content = content,
+            PrimaryButtonText = Localize("GetStarted"), CloseButtonText = Localize("Close"), DefaultButton = ContentDialogButton.Primary };
     }
     private async Task ShowWelcomeAsync()
     {
@@ -302,10 +349,37 @@ public sealed partial class MainWindow : Window
     {
         if (smoke) return;
         try { settings.Save(); }
-        catch (Exception ex) { ShowNotice("설정을 저장하지 못했습니다", ex.Message, InfoBarSeverity.Error); }
+        catch (Exception ex) { ShowNotice("SaveSettingsFailed", ex.Message, InfoBarSeverity.Error); }
     }
-    private void ShowNotice(string title, string message, InfoBarSeverity severity)
-    { Notice.Title = title; Notice.Message = message; Notice.Severity = severity; Notice.IsOpen = true; }
+    private void ShowNotice(string titleKey, string message, InfoBarSeverity severity, bool localizeMessage = false)
+    {
+        noticeText = (titleKey, message, localizeMessage);
+        UpdateNoticeText();
+        Notice.Severity = severity;
+        Notice.IsOpen = true;
+    }
+
+    private void UpdateNoticeText()
+    {
+        Notice.Title = Localize(noticeText.TitleKey);
+        Notice.Message = noticeText.LocalizeMessage ? Localize(noticeText.Message) : LocalizeInputError(noticeText.Message);
+    }
+
+    private string LocalizeInputError(string error) => error switch
+    {
+        ElevationSupport.RequiredMessage => Localize("InputElevationRequired"),
+        HidField.OutOfRangeMessage => Localize("InputOutOfRange"),
+        TouchpadDevice.UnsupportedReportMessage => Localize("InputUnsupportedReport"),
+        TouchpadDevice.ReportTooLongMessage => Localize("InputReportTooLong"),
+        TouchpadDevice.NotPrecisionTouchpadMessage => Localize("InputNotPrecisionTouchpad"),
+        RawTouchpad.RegistrationErrorMessage => Localize("InputRegistrationFailed"),
+        RawTouchpad.ReadDevicesErrorMessage => Localize("InputReadDevicesFailed"),
+        RawTouchpad.DeviceListChangedMessage => Localize("InputDeviceListChanged"),
+        _ when error?.StartsWith(WindowMover.FailurePrefix, StringComparison.Ordinal) == true =>
+            Localize("InputMoveFailed") + ": " + error[WindowMover.FailurePrefix.Length..],
+        _ => error
+    };
+
     private void UpdateStatus()
     {
         if (!ready) return;
@@ -318,8 +392,20 @@ public sealed partial class MainWindow : Window
         if (before == null || renderedEnabled != enabled || before.Resizing != state.Resizing || before.DirectionalResizing != state.DirectionalResizing ||
             before.ResizeReady != state.ResizeReady || before.Dragging != state.Dragging || before.EdgeAction != state.EdgeAction || before.ResizeBehavior != state.ResizeBehavior)
         {
-            StateTitle.Text = state.Resizing ? "손끝을 따라 크기 조절 중" : state.ResizeReady ? "크기 조절 준비 완료" : state.Dragging ? "손끝을 따라 이동 중" : enabled ? "창 이동 준비 완료" : "잠시 쉬어가는 중";
-            StateDescription.Text = state.DirectionalResizing ? (state.ResizeBehavior == ResizeBehavior.LowerCorners ? "아래 모서리를 움직입니다. 위로 밀면 줄어들고 아래로 밀면 커집니다." : "처음 미는 방향의 테두리를 조절합니다. 반대로 당기면 줄어듭니다.") : state.ResizeReady ? "이제 상하좌우로 밀어 창 크기를 조절하세요." : state.EdgeAction == WindowLayoutAction.LeftHalf ? "손가락을 떼면 왼쪽 반쪽에 배치합니다." : state.EdgeAction == WindowLayoutAction.RightHalf ? "손가락을 떼면 오른쪽 반쪽에 배치합니다." : state.TopEdgeArmed ? "손가락을 떼면 창을 최대화합니다." : state.Resizing ? "세 손가락을 벌리거나 오므려 크기를 조절하세요." : state.Dragging ? "손가락을 떼면 그 자리에 멈춥니다." : enabled ? "커서를 원하는 창 위에 놓고 세 손가락을 움직이세요." : "다시 켜면 세 손가락으로 창을 옮길 수 있습니다.";
+            StateTitle.Text = Localize(state.Resizing ? "StateResizing" : state.ResizeReady ? "StateResizeReady" :
+                state.Dragging ? "StateDragging" : enabled ? "StateReady" : "StatePaused");
+            StateDescription.Text = Localize(state switch
+            {
+                { DirectionalResizing: true, ResizeBehavior: ResizeBehavior.LowerCorners } => "StateLowerCorners",
+                { DirectionalResizing: true } => "StateGrowInDirection",
+                { ResizeReady: true } => "StateResizeHint",
+                { EdgeAction: WindowLayoutAction.LeftHalf } => "StateSnapLeft",
+                { EdgeAction: WindowLayoutAction.RightHalf } => "StateSnapRight",
+                { TopEdgeArmed: true } => "StateMaximize",
+                { Resizing: true } => "StatePinchHint",
+                { Dragging: true } => "StateDragHint",
+                _ => enabled ? "StateReadyHint" : "StatePausedHint"
+            });
         }
         if (before == null || renderedEnabled != enabled)
         {
@@ -327,10 +413,12 @@ public sealed partial class MainWindow : Window
             tray.Enabled = enabled;
         }
         if (before == null || before.DeviceCount != state.DeviceCount)
-            DeviceTitle.Text = state.DeviceCount > 0 ? "정밀 터치패드 연결됨" : "정밀 터치패드를 찾지 못했습니다";
+            DeviceTitle.Text = state.DeviceCount > 0 ? Localize("TouchpadConnected") : Localize("TouchpadMissing");
         int contacts = state.Contacts;
         if (before == null || before.Error != state.Error || before.DeviceCount != state.DeviceCount || before.Contacts != contacts || before.Reports != state.Reports)
-            DeviceDetail.Text = state.Error ?? (state.DeviceCount > 0 ? state.DeviceCount + "개 장치 · 손가락 " + contacts + "개 감지 · 입력 " + state.Reports.ToString("N0") + "회" : "연결 상태를 확인한 뒤 다시 검색해 주세요.");
+            DeviceDetail.Text = LocalizeInputError(state.Error) ?? (state.DeviceCount > 0
+                ? string.Format(uiCulture, Localize("TouchpadCounts"), state.DeviceCount, contacts, state.Reports)
+                : Localize("TouchpadMissingHelp"));
         if (before == null || before.Contacts != contacts)
         {
             Finger1.Opacity = contacts > 0 ? 1 : 0.24;
@@ -343,7 +431,7 @@ public sealed partial class MainWindow : Window
     private async void OpenSettingsClicked(object sender, RoutedEventArgs e)
     {
         try { await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:devices-touchpad")); }
-        catch (Exception ex) { ShowNotice("Windows 설정을 열지 못했습니다", ex.Message, InfoBarSeverity.Error); }
+        catch (Exception ex) { ShowNotice("OpenSettingsFailed", ex.Message, InfoBarSeverity.Error); }
     }
     private void HideClicked(object sender, RoutedEventArgs e) => HideToTray();
     private async void DiagnosticClicked(object sender, RoutedEventArgs e)
@@ -351,12 +439,12 @@ public sealed partial class MainWindow : Window
         try
         {
             var picker = new Windows.Storage.Pickers.FileSavePicker { SuggestedFileName = "Glide-diagnostic" };
-            picker.FileTypeChoices.Add("텍스트 파일", new List<string> { ".txt" });
+            picker.FileTypeChoices.Add(Localize("TextFile"), new List<string> { ".txt" });
             InitializeWithWindow.Initialize(picker, hwnd);
             StorageFile file = await picker.PickSaveFileAsync();
-            if (file != null) { await File.WriteAllTextAsync(file.Path, DescribeInput()); ShowNotice("진단 정보를 저장했습니다", file.Path, InfoBarSeverity.Success); }
+            if (file != null) { await File.WriteAllTextAsync(file.Path, DescribeInput()); ShowNotice("DiagnosticsSaved", file.Path, InfoBarSeverity.Success); }
         }
-        catch (Exception ex) { ShowNotice("진단 정보를 저장하지 못했습니다", ex.Message, InfoBarSeverity.Error); }
+        catch (Exception ex) { ShowNotice("DiagnosticsFailed", ex.Message, InfoBarSeverity.Error); }
     }
     private string DescribeInput()
     {
@@ -470,6 +558,7 @@ public sealed partial class MainWindow : Window
                 File.WriteAllText(Path.Combine(directory, "winui-smoke-test.txt"), "PASS: horizontal resize check.\r\n" + DescribeInput());
                 return;
             }
+            await CheckLanguageAsync(directory);
             if (NeedsWelcome)
             {
                 Task firstRun = ShowWelcomeAsync();
@@ -569,9 +658,32 @@ public sealed partial class MainWindow : Window
             await SavePreviewAsync(directory, "welcome.png", ElementTheme.Light, welcome);
             welcome.Hide(); await showing;
             await CheckHorizontalLayoutAsync(directory, true);
-            File.WriteAllText(Path.Combine(directory, "winui-smoke-test.txt"), "PASS: WinUI 3 startup, administrator restart controls, decimal spinner formatting, lower-corner resize settings and names, first-run dialog, horizontal resizing, hidden/minimized UI suspension, light/dark rendering.\r\n" + DescribeInput());
+            File.WriteAllText(Path.Combine(directory, "winui-smoke-test.txt"), "PASS: WinUI 3 startup, live language switching, administrator restart controls, decimal spinner formatting, lower-corner resize settings and names, first-run dialog, horizontal resizing, hidden/minimized UI suspension, light/dark rendering.\r\n" + DescribeInput());
         }
         catch (Exception ex) { File.WriteAllText(Path.Combine(directory, "winui-smoke-test.txt"), "FAIL\r\n" + ex); }
         finally { ExitApp(); }
+    }
+
+    private async Task CheckLanguageAsync(string directory)
+    {
+        ShowNotice("HotkeyFailed", "HotkeyHelp", InfoBarSeverity.Informational, localizeMessage: true);
+        LanguageCombo.SelectedIndex = (int)AppLanguage.English;
+        await Task.Delay(80);
+        if (settings.Language != AppLanguage.English || Root.Language != "en-US" ||
+            !Title.StartsWith(EnglishWindowTitle, StringComparison.Ordinal) || !Equals(FollowSwitch.OnContent, "On") ||
+            !Equals(ResizeHoldBox.Header, "Hold time (seconds)") || Notice.Title != "Could not register the shortcut" ||
+            CreateWelcomeDialog().PrimaryButtonText != "Get started")
+            throw new Exception("Changing the language did not update the English interface.");
+        Notice.IsOpen = false;
+        await SavePreviewAsync(directory, "language-english.png", ElementTheme.Light);
+
+        LanguageCombo.SelectedIndex = (int)AppLanguage.System;
+        if (Root.Language != ResolveCulture(AppLanguage.System).Name)
+            throw new Exception("The Windows language option did not resolve the system language.");
+
+        LanguageCombo.SelectedIndex = (int)AppLanguage.Korean;
+        if (settings.Language != AppLanguage.Korean || Root.Language != "ko-KR" || !Equals(FollowSwitch.OnContent, "켬") ||
+            CreateWelcomeDialog().PrimaryButtonText != "시작하기")
+            throw new Exception("Changing the language did not restore the Korean interface.");
     }
 }

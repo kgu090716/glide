@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Tagline" xml:space="preserve"><value>Three-finger window control</value></data>
+  <data name="PageTitle" xml:space="preserve"><value>Move your windows</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>Drag with three fingers anywhere on a window.</value></data>
+  <data name="Enabled" xml:space="preserve"><value>Active</value></data>
+  <data name="Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="EnableDragging" xml:space="preserve"><value>Enable three-finger window control</value></data>
+  <data name="On" xml:space="preserve"><value>On</value></data>
+  <data name="Off" xml:space="preserve"><value>Off</value></data>
+  <data name="ElevationNeeded" xml:space="preserve"><value>This window requires administrator access</value></data>
+  <data name="ElevationHelp" xml:space="preserve"><value>Restart Glide as administrator to use gestures in Task Manager.</value></data>
+  <data name="RestartAsAdministrator" xml:space="preserve"><value>Restart as administrator</value></data>
+  <data name="Language" xml:space="preserve"><value>Language</value></data>
+  <data name="LanguageDescription" xml:space="preserve"><value>Choose the language for Glide and its tray menu.</value></data>
+  <data name="WindowsLanguage" xml:space="preserve"><value>Use Windows language</value></data>
+  <data name="DragSettings" xml:space="preserve"><value>Drag settings</value></data>
+  <data name="FollowCursor" xml:space="preserve"><value>Move the cursor too</value></data>
+  <data name="FollowCursorHelp" xml:space="preserve"><value>Keep the cursor at the same position inside the window.</value></data>
+  <data name="RaiseWindow" xml:space="preserve"><value>Bring the dragged window to the front</value></data>
+  <data name="RaiseWindowHelp" xml:space="preserve"><value>Bring an inactive window forward when you start dragging it.</value></data>
+  <data name="TopOverflow" xml:space="preserve"><value>Allow dragging past the top edge</value></data>
+  <data name="TopOverflowHelp" xml:space="preserve"><value>Keep moving the window when its title bar passes the top of the screen.</value></data>
+  <data name="PinchResize" xml:space="preserve"><value>Resize with three fingers</value></data>
+  <data name="PinchResizeHelp" xml:space="preserve"><value>Spread to make the window larger or pinch to make it smaller.</value></data>
+  <data name="DragSpeed" xml:space="preserve"><value>Drag speed</value></data>
+  <data name="DragSpeedHelp" xml:space="preserve"><value>Adjust how far the window moves with your fingers.</value></data>
+  <data name="DragSpeedName" xml:space="preserve"><value>Window drag speed</value></data>
+  <data name="Slower" xml:space="preserve"><value>Slower</value></data>
+  <data name="Faster" xml:space="preserve"><value>Faster</value></data>
+  <data name="RestoreMaximized" xml:space="preserve"><value>Move maximized windows</value></data>
+  <data name="RestoreMaximizedHelp" xml:space="preserve"><value>Restore the original size before moving the window.</value></data>
+  <data name="RestoreMaximizedName" xml:space="preserve"><value>Restore and move maximized windows</value></data>
+  <data name="DirectionalResize" xml:space="preserve"><value>Directional resize</value></data>
+  <data name="ResizeEdges" xml:space="preserve"><value>Resize from the edges</value></data>
+  <data name="ResizeEdgesHelp" xml:space="preserve"><value>Hold three fingers still, then slide to resize from the edges.</value></data>
+  <data name="HoldTime" xml:space="preserve"><value>Hold time (seconds)</value></data>
+  <data name="HoldTimeName" xml:space="preserve"><value>Hold time before resizing, in seconds</value></data>
+  <data name="ResizeMode" xml:space="preserve"><value>Resize behavior</value></data>
+  <data name="ResizeModeName" xml:space="preserve"><value>Directional resize behavior</value></data>
+  <data name="GrowInDirection" xml:space="preserve"><value>Expand in the direction you slide</value></data>
+  <data name="LowerCorners" xml:space="preserve"><value>Slide up to shrink, down to expand</value></data>
+  <data name="Layout" xml:space="preserve"><value>Window layout</value></data>
+  <data name="MaximizeAtTop" xml:space="preserve"><value>Maximize at the top edge</value></data>
+  <data name="MaximizeAtTopHelp" xml:space="preserve"><value>Drag to the top edge and lift your fingers to maximize.</value></data>
+  <data name="SideSnap" xml:space="preserve"><value>Snap to the left or right half</value></data>
+  <data name="SideSnapHelp" xml:space="preserve"><value>Release at a side edge to snap. Drag away to restore the original size.</value></data>
+  <data name="Flick" xml:space="preserve"><value>Snap with a three-finger flick</value></data>
+  <data name="FlickHelp" xml:space="preserve"><value>Flick and lift within 0.35 seconds. Flick up or diagonally up to maximize, or sideways to snap.</value></data>
+  <data name="FlickSensitivity" xml:space="preserve"><value>Flick sensitivity</value></data>
+  <data name="FirmFlick" xml:space="preserve"><value>Faster flick</value></data>
+  <data name="GentleFlick" xml:space="preserve"><value>Gentler flick</value></data>
+  <data name="Convenience" xml:space="preserve"><value>Convenience</value></data>
+  <data name="AdministratorWindows" xml:space="preserve"><value>Task Manager and other elevated windows</value></data>
+  <data name="AdministratorHelp" xml:space="preserve"><value>Restart as administrator to use gestures in Task Manager. Glide launches with standard permissions at sign-in.</value></data>
+  <data name="AdministratorActive" xml:space="preserve"><value>Glide is running as administrator. Gestures work in Task Manager and other elevated windows.</value></data>
+  <data name="StartAtSignIn" xml:space="preserve"><value>Launch at Windows sign-in</value></data>
+  <data name="StartAtSignInHelp" xml:space="preserve"><value>Start in the tray with the settings window closed.</value></data>
+  <data name="Touchpad" xml:space="preserve"><value>Touchpad</value></data>
+  <data name="ScanAgain" xml:space="preserve"><value>Scan again</value></data>
+  <data name="FingerCountTip" xml:space="preserve"><value>Number of fingers detected</value></data>
+  <data name="ShortcutHint" xml:space="preserve"><value>Ctrl + Alt + F9  Pause · Esc  Cancel</value></data>
+  <data name="HideToTray" xml:space="preserve"><value>Hide to tray</value></data>
+  <data name="SaveDiagnostics" xml:space="preserve"><value>Save diagnostics</value></data>
+  <data name="StartupReadFailed" xml:space="preserve"><value>Could not read the launch-at-sign-in setting</value></data>
+  <data name="HotkeyFailed" xml:space="preserve"><value>Could not register the shortcut</value></data>
+  <data name="HotkeyHelp" xml:space="preserve"><value>Use the toggle above or the tray menu to pause or resume.</value></data>
+  <data name="RestartProcessFailed" xml:space="preserve"><value>Could not launch a new Glide process.</value></data>
+  <data name="RestartFailed" xml:space="preserve"><value>Could not restart Glide</value></data>
+  <data name="RestartStillRunning" xml:space="preserve"><value>Glide is still running. Try restarting again.</value></data>
+  <data name="RestartCancelled" xml:space="preserve"><value>Continuing with current permissions</value></data>
+  <data name="ElevationCancelled" xml:space="preserve"><value>The administrator request was cancelled.</value></data>
+  <data name="ElevationFailed" xml:space="preserve"><value>Could not restart as administrator</value></data>
+  <data name="StartupChangeFailed" xml:space="preserve"><value>Could not change the launch-at-sign-in setting</value></data>
+  <data name="LowerCornersHelp" xml:space="preserve"><value>↖ Shrink from bottom right · ↗ Shrink from bottom left&#10;↙ Expand at bottom left · ↘ Expand at bottom right</value></data>
+  <data name="GrowInDirectionHelp" xml:space="preserve"><value>Slide to extend the edge in that direction. Reverse to shrink it.</value></data>
+  <data name="WelcomeIntro" xml:space="preserve"><value>Turn off the default Windows gestures so they don’t run at the same time as Glide.</value></data>
+  <data name="WelcomeSteps" xml:space="preserve"><value>In Windows Settings → Touchpad → Three-finger gestures, set Swipes and Taps to Nothing.</value></data>
+  <data name="OpenTouchpadSettings" xml:space="preserve"><value>Open touchpad settings</value></data>
+  <data name="WelcomeOnce" xml:space="preserve"><value>This guide appears the first time you open Glide.</value></data>
+  <data name="WelcomeTitle" xml:space="preserve"><value>Before you use Glide</value></data>
+  <data name="GetStarted" xml:space="preserve"><value>Get started</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="SaveSettingsFailed" xml:space="preserve"><value>Could not save settings</value></data>
+  <data name="StateResizing" xml:space="preserve"><value>Resizing window</value></data>
+  <data name="StateResizeReady" xml:space="preserve"><value>Ready to resize</value></data>
+  <data name="StateDragging" xml:space="preserve"><value>Moving window</value></data>
+  <data name="StateReady" xml:space="preserve"><value>Ready to move windows</value></data>
+  <data name="StatePaused" xml:space="preserve"><value>Gestures paused</value></data>
+  <data name="StateLowerCorners" xml:space="preserve"><value>Slide up to shrink or down to expand from a bottom corner.</value></data>
+  <data name="StateGrowInDirection" xml:space="preserve"><value>Slide to extend an edge. Reverse to shrink it.</value></data>
+  <data name="StateResizeHint" xml:space="preserve"><value>Slide in any direction to resize the window.</value></data>
+  <data name="StateSnapLeft" xml:space="preserve"><value>Lift your fingers to snap to the left half.</value></data>
+  <data name="StateSnapRight" xml:space="preserve"><value>Lift your fingers to snap to the right half.</value></data>
+  <data name="StateMaximize" xml:space="preserve"><value>Lift your fingers to maximize the window.</value></data>
+  <data name="StatePinchHint" xml:space="preserve"><value>Spread or pinch three fingers to resize.</value></data>
+  <data name="StateDragHint" xml:space="preserve"><value>Lift your fingers to leave the window in place.</value></data>
+  <data name="StateReadyHint" xml:space="preserve"><value>Point at a window and slide three fingers together.</value></data>
+  <data name="StatePausedHint" xml:space="preserve"><value>Turn gestures back on to move windows with three fingers.</value></data>
+  <data name="TouchpadConnected" xml:space="preserve"><value>Precision Touchpad connected</value></data>
+  <data name="TouchpadMissing" xml:space="preserve"><value>No Precision Touchpad detected</value></data>
+  <data name="TouchpadCounts" xml:space="preserve"><value>Devices: {0} · Fingers: {1} · Reports: {2:N0}</value></data>
+  <data name="TouchpadMissingHelp" xml:space="preserve"><value>Check the connection, then scan again.</value></data>
+  <data name="OpenSettingsFailed" xml:space="preserve"><value>Could not open Windows Settings</value></data>
+  <data name="TextFile" xml:space="preserve"><value>Text file</value></data>
+  <data name="DiagnosticsSaved" xml:space="preserve"><value>Diagnostics saved</value></data>
+  <data name="DiagnosticsFailed" xml:space="preserve"><value>Could not save diagnostics</value></data>
+  <data name="TrayTooltip" xml:space="preserve"><value>Glide · Three-finger window control</value></data>
+  <data name="TrayOpen" xml:space="preserve"><value>Open Glide</value></data>
+  <data name="TrayToggle" xml:space="preserve"><value>Enable window gestures</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="InputElevationRequired" xml:space="preserve"><value>Restart Glide as administrator to control elevated windows such as Task Manager.</value></data>
+  <data name="InputMoveFailed" xml:space="preserve"><value>Could not move the window</value></data>
+  <data name="InputOutOfRange" xml:space="preserve"><value>The touchpad reported coordinates outside its supported range.</value></data>
+  <data name="InputUnsupportedReport" xml:space="preserve"><value>This touchpad’s contact report format is unsupported.</value></data>
+  <data name="InputRegistrationFailed" xml:space="preserve"><value>Could not register for touchpad input.</value></data>
+  <data name="InputReadDevicesFailed" xml:space="preserve"><value>Could not read the device list.</value></data>
+  <data name="InputDeviceListChanged" xml:space="preserve"><value>The device list changed. Scan again.</value></data>
+  <data name="InputReportTooLong" xml:space="preserve"><value>The HID report is too long.</value></data>
+  <data name="InputNotPrecisionTouchpad" xml:space="preserve"><value>This device is not a Precision Touchpad.</value></data>
+</root>

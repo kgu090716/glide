@@ -5,6 +5,8 @@ using System.Text;
 
 namespace ThreeFingerWindowDrag
 {
+    internal enum AppLanguage { System, English, Korean }
+
     internal sealed class Settings
     {
         public int Speed = 12;
@@ -22,6 +24,7 @@ namespace ThreeFingerWindowDrag
         public bool DirectionalResize = true;
         public double ResizeHoldSeconds = 1;
         public ResizeBehavior ResizeBehavior = ResizeBehavior.Grow;
+        public AppLanguage Language = AppLanguage.System;
         internal bool NeedsWelcome { get { return !OnboardingShown && !SetupDone; } }
         internal DirectionalResizeOptions ResizeOptions { get { return new DirectionalResizeOptions {
             Enabled = DirectionalResize, HoldMilliseconds = (int)Math.Round(ResizeTiming.NormalizeSeconds(ResizeHoldSeconds) * 1000),
@@ -57,6 +60,8 @@ namespace ThreeFingerWindowDrag
                     if (pair[0] == "DirectionalResize") result.DirectionalResize = pair[1] == "true";
                     if (pair[0] == "ResizeBehavior" && Enum.TryParse(pair[1], out ResizeBehavior behavior) && Enum.IsDefined(behavior)) result.ResizeBehavior = behavior;
                     if (pair[0] == "ResizeBehavior" && pair[1] == "Shrink") result.ResizeBehavior = ResizeBehavior.LowerCorners;
+                    if (pair[0] == "Language" && Enum.TryParse(pair[1], out AppLanguage language) && Enum.IsDefined(language))
+                        result.Language = language;
                     if (pair[0] == "ResizeHoldSeconds" && double.TryParse(pair[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds) && double.IsFinite(seconds))
                         result.ResizeHoldSeconds = ResizeTiming.NormalizeSeconds(seconds);
                 }
@@ -78,7 +83,7 @@ namespace ThreeFingerWindowDrag
                 "\r\nSetupDone=" + SetupDone.ToString().ToLowerInvariant() + "\r\nOnboardingShown=" + OnboardingShown.ToString().ToLowerInvariant() +
                 "\r\nDirectionalResize=" + DirectionalResize.ToString().ToLowerInvariant() +
                 "\r\nResizeHoldSeconds=" + ResizeTiming.NormalizeSeconds(ResizeHoldSeconds).ToString("0.0", CultureInfo.InvariantCulture) +
-                "\r\nResizeBehavior=" + ResizeBehavior + "\r\n";
+                "\r\nResizeBehavior=" + ResizeBehavior + "\r\nLanguage=" + Language + "\r\n";
             Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
             File.WriteAllText(FilePath, body, new UTF8Encoding(true));
         }

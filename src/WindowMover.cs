@@ -7,6 +7,7 @@ namespace ThreeFingerWindowDrag
 {
     internal sealed class WindowMover : IWindowMover, IDisposable
     {
+        internal const string FailurePrefix = "창 이동 실패: ";
         private IntPtr window;
         private Native.Point cursor;
         private int originX, originY, width, height;
@@ -262,7 +263,7 @@ namespace ThreeFingerWindowDrag
             {
                 int error = result.Error;
                 ElevationRequired = error == 5 && !ElevationSupport.IsElevated;
-                Status = ElevationRequired ? ElevationSupport.RequiredMessage : "창 이동 실패: " + new Win32Exception(error).Message;
+                Status = ElevationRequired ? ElevationSupport.RequiredMessage : FailurePrefix + new Win32Exception(error).Message;
                 return;
             }
             if (request.FollowCursor)

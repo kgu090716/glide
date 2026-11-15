@@ -33,7 +33,7 @@ namespace ThreeFingerWindowDrag
             };
         }
         // Called only after Windows has approved elevation. Cancellation leaves the current app alive.
-        internal static bool CompleteHandoff(int previousProcess, string windowTitle, uint quitMessage)
+        internal static bool CompleteHandoff(int previousProcess, string windowTitle, uint quitMessage, string alternateWindowTitle = null)
         {
             if (!IsElevated || previousProcess <= 0 || previousProcess == Environment.ProcessId) return false;
             try
@@ -42,6 +42,11 @@ namespace ThreeFingerWindowDrag
                 if (!string.Equals(previous.MainModule.FileName, Environment.ProcessPath, StringComparison.OrdinalIgnoreCase)) return false;
                 IntPtr window = Native.FindWindow(null, windowTitle);
                 Native.GetWindowThreadProcessId(window, out uint owner);
+                if ((window == IntPtr.Zero || owner != previousProcess) && alternateWindowTitle != null)
+                {
+                    window = Native.FindWindow(null, alternateWindowTitle);
+                    Native.GetWindowThreadProcessId(window, out owner);
+                }
                 if (window == IntPtr.Zero || owner != previousProcess) return false;
                 return Native.PostMessage(window, quitMessage, IntPtr.Zero, IntPtr.Zero) && previous.WaitForExit(8000);
             }

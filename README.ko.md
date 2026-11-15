@@ -43,15 +43,15 @@ Windows 정밀 터치패드에서 **세 손가락으로 창을 옮기고, 크기
 
 ## 제스처
 
-| 하고 싶은 일 | 터치패드 동작 | 영상 |
+| 하고 싶은 일 | 터치패드 동작 | GIF |
 | --- | --- | --- |
-| 창 옮기기 | 세 손가락을 나란히 움직입니다. **커서도 함께 이동**을 켜면 커서가 창 안의 상대 위치를 따라갑니다. | [창 이동](docs/media/gestures/01-drag.mp4) |
-| 창 키우기 | 세 손가락을 펼칩니다. | [창 확대](docs/media/gestures/02-spread.mp4) |
-| 창 줄이기 | 세 손가락을 오므립니다. | [창 축소](docs/media/gestures/03-pinch.mp4) |
-| 창 테두리 조절하기 | 세 손가락을 **가만히 올려둔 뒤** 밉니다. 기본 대기 시간은 1초이며 **올려놓는 시간 (초)**에서 바꿀 수 있습니다. | [방향별 크기 조절](docs/media/gestures/04-hold.mp4) |
-| 최대화하기 | 창을 화면 위쪽 끝까지 끌고 손을 뗍니다. | [위쪽 끝에서 최대화](docs/media/gestures/05-maximize.mp4) |
-| 한쪽 절반에 배치하기 | 창을 화면의 왼쪽 또는 오른쪽 끝까지 끌고 손을 뗍니다. | [좌우 배치와 복원](docs/media/gestures/06-side-snap.mp4) |
-| 빠르게 창 배치하기 | 세 손가락을 댄 뒤 **0.35초 안에** 빠르게 밀고 뗍니다. **↖·↑·↗**는 최대화, **←·→**는 해당 방향의 반쪽 배치입니다. | [빠르게 밀기](docs/media/gestures/07-flick.mp4) |
+| 창 옮기기 | 세 손가락을 나란히 움직입니다. **커서도 함께 이동**을 켜면 커서가 창 안의 상대 위치를 따라갑니다. | <img src="docs/media/gestures/01-drag.gif" width="400" alt="창 이동"> |
+| 창 키우기 | 세 손가락을 펼칩니다. | <img src="docs/media/gestures/02-spread.gif" width="400" alt="창 확대"> |
+| 창 줄이기 | 세 손가락을 오므립니다. | <img src="docs/media/gestures/03-pinch.gif" width="400" alt="창 축소"> |
+| 창 테두리 조절하기 | 세 손가락을 **가만히 올려둔 뒤** 밉니다. 기본 대기 시간은 1초이며 **올려놓는 시간 (초)**에서 바꿀 수 있습니다. | <img src="docs/media/gestures/04-hold.gif" width="400" alt="방향별 크기 조절"> |
+| 최대화하기 | 창을 화면 위쪽 끝까지 끌고 손을 뗍니다. | <img src="docs/media/gestures/05-maximize.gif" width="400" alt="위쪽 끝에서 최대화"> |
+| 한쪽 절반에 배치하기 | 창을 화면의 왼쪽 또는 오른쪽 끝까지 끌고 손을 뗍니다. | <img src="docs/media/gestures/06-side-snap.gif" width="400" alt="좌우 배치와 복원"> |
+| 빠르게 창 배치하기 | 세 손가락을 댄 뒤 **0.35초 안에** 빠르게 밀고 뗍니다. **↖·↑·↗**는 최대화, **←·→**는 해당 방향의 반쪽 배치입니다. | <img src="docs/media/gestures/07-flick.gif" width="400" alt="빠르게 밀기"> |
 
 Glide로 반쪽 배치한 창을 다시 끌면 배치 전 크기로 돌아옵니다. 설정에서 제스처를 각각 켜고 끌 수 있고, 이동 속도와 빠른 동작의 민감도도 조절할 수 있습니다.
 

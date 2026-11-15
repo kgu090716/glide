@@ -43,15 +43,15 @@ Both downloads include the .NET and WinUI runtimes.
 
 ## Gestures
 
-| Action | Touchpad gesture | Video |
+| Action | Touchpad gesture | GIF |
 | --- | --- | --- |
-| Move a window | Slide three fingers together. Enable **Move the cursor too** to keep the cursor at the same relative position inside the moving window. | [Move](docs/media/gestures-en/01-drag.mp4) |
-| Enlarge a window | Spread three fingers apart. | [Enlarge](docs/media/gestures-en/02-spread.mp4) |
-| Shrink a window | Pinch three fingers together. | [Shrink](docs/media/gestures-en/03-pinch.mp4) |
-| Resize from the edges | Hold three fingers still, then slide. The default hold time is one second. You can adjust it in the **Hold time** field. | [Directional resize](docs/media/gestures-en/04-hold.mp4) |
-| Maximize a window | Drag the window to the top edge of the screen and lift your fingers. | [Maximize at the top edge](docs/media/gestures-en/05-maximize.mp4) |
-| Snap a window to one half | Drag the window to the left or right edge of the screen and lift your fingers. | [Snap and restore](docs/media/gestures-en/06-side-snap.mp4) |
-| Snap with a quick flick | Touch down with three fingers, flick, and lift within **0.35 seconds**. **↖, ↑, and ↗** maximize the window. **← and →** snap it to the corresponding half. | [Quick flick](docs/media/gestures-en/07-flick.mp4) |
+| Move a window | Slide three fingers together. Enable **Move the cursor too** to keep the cursor at the same relative position inside the moving window. | <img src="docs/media/gestures-en/01-drag.gif" width="400" alt="Move"> |
+| Enlarge a window | Spread three fingers apart. | <img src="docs/media/gestures-en/02-spread.gif" width="400" alt="Enlarge"> |
+| Shrink a window | Pinch three fingers together. | <img src="docs/media/gestures-en/03-pinch.gif" width="400" alt="Shrink"> |
+| Resize from the edges | Hold three fingers still, then slide. The default hold time is one second. You can adjust it in the **Hold time** field. | <img src="docs/media/gestures-en/04-hold.gif" width="400" alt="Directional resize"> |
+| Maximize a window | Drag the window to the top edge of the screen and lift your fingers. | <img src="docs/media/gestures-en/05-maximize.gif" width="400" alt="Maximize at the top edge"> |
+| Snap a window to one half | Drag the window to the left or right edge of the screen and lift your fingers. | <img src="docs/media/gestures-en/06-side-snap.gif" width="400" alt="Snap and restore"> |
+| Snap with a quick flick | Touch down with three fingers, flick, and lift within **0.35 seconds**. **↖, ↑, and ↗** maximize the window. **← and →** snap it to the corresponding half. | <img src="docs/media/gestures-en/07-flick.gif" width="400" alt="Quick flick"> |
 
 Drag a window away after snapping it with Glide to restore its previous size. You can turn gestures on or off individually and adjust drag speed and flick sensitivity.
 

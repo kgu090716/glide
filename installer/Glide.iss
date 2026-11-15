@@ -37,9 +37,25 @@ SetupLogging=yes
 Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[CustomMessages]
+korean.LaunchAtSignIn=Windows 로그인 시 자동 시작
+english.LaunchAtSignIn=Launch Glide at Windows sign-in
+korean.StartOptions=시작 옵션:
+english.StartOptions=Startup options:
+korean.DesktopShortcut=바탕 화면 바로가기 만들기
+english.DesktopShortcut=Create a desktop shortcut
+korean.ShortcutOptions=바로가기:
+english.ShortcutOptions=Shortcuts:
+korean.RunGlide=Glide 실행
+english.RunGlide=Launch Glide
+korean.QuitBeforeInstall=실행 중인 Glide를 트레이 메뉴에서 종료한 뒤 다시 시도해 주세요.
+english.QuitBeforeInstall=Quit Glide from its tray menu, then try again.
+korean.QuitBeforeUninstall=Glide를 트레이 메뉴에서 종료한 뒤 제거해 주세요.
+english.QuitBeforeUninstall=Quit Glide from its tray menu before uninstalling.
+
 [Tasks]
-Name: "autostart"; Description: "Windows 로그인 시 자동 시작"; GroupDescription: "시작 옵션:"; Check: not IsTestMode
-Name: "desktopicon"; Description: "바탕 화면 바로가기 만들기"; GroupDescription: "바로가기:"; Flags: unchecked; Check: not IsTestMode
+Name: "autostart"; Description: "{cm:LaunchAtSignIn}"; GroupDescription: "{cm:StartOptions}"; Check: not IsTestMode
+Name: "desktopicon"; Description: "{cm:DesktopShortcut}"; GroupDescription: "{cm:ShortcutOptions}"; Flags: unchecked; Check: not IsTestMode
 
 [Files]
 Source: "..\dist\*"; DestDir: "{app}"; Excludes: "settings.ini,crash.log,*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -53,7 +69,7 @@ Name: "{userdesktop}\Glide"; Filename: "{app}\{#MyAppExe}"; WorkingDir: "{app}";
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Glide"; ValueData: """{app}\{#MyAppExe}"" --tray"; Tasks: autostart; Check: not IsTestMode
 
 [Run]
-Filename: "{app}\{#MyAppExe}"; Description: "Glide 실행"; Flags: nowait postinstall skipifsilent; Check: not IsTestMode
+Filename: "{app}\{#MyAppExe}"; Description: "{cm:RunGlide}"; Flags: nowait postinstall skipifsilent; Check: not IsTestMode
 
 [Code]
 const RunKey = 'Software\Microsoft\Windows\CurrentVersion\Run';
@@ -76,6 +92,7 @@ begin
   if IsTestMode then Exit;
   if not CheckForMutexes('Local\ThreeFingerWindowDrag.1') then Exit;
   Wnd := FindWindowByWindowName('Glide · 세 손가락 창 이동');
+  if Wnd = 0 then Wnd := FindWindowByWindowName('Glide · Three-finger window control');
   if Wnd <> 0 then PostMessage(Wnd, $8000 + 28, 0, 0);
   for I := 1 to 50 do begin
     if not CheckForMutexes('Local\ThreeFingerWindowDrag.1') then Exit;
@@ -88,13 +105,13 @@ function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   Result := '';
   if not StopGlide then
-    Result := '실행 중인 Glide를 트레이 메뉴에서 종료한 뒤 다시 시도해 주세요.';
+    Result := CustomMessage('QuitBeforeInstall');
 end;
 
 function InitializeUninstall: Boolean;
 begin
   Result := StopGlide;
-  if not Result then MsgBox('Glide를 트레이 메뉴에서 종료한 뒤 제거해 주세요.', mbError, MB_OK);
+  if not Result then MsgBox(CustomMessage('QuitBeforeUninstall'), mbError, MB_OK);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

@@ -19,18 +19,18 @@ public partial class App : Application
         string[] commandLine = Environment.GetCommandLineArgs();
         int restartAt = Array.IndexOf(commandLine, "--elevated-restart");
         if (restartAt >= 0 && (restartAt + 1 >= commandLine.Length || !int.TryParse(commandLine[restartAt + 1], out int previous) ||
-            !ElevationSupport.CompleteHandoff(previous, MainWindow.NativeTitle, MainWindow.QuitMessage)))
+            !ElevationSupport.CompleteHandoff(previous, MainWindow.NativeTitle, MainWindow.QuitMessage, MainWindow.EnglishWindowTitle)))
         { Exit(); return; }
         if (Environment.GetCommandLineArgs().Contains("--shutdown"))
         {
-            Native.PostMessage(Native.FindWindow(null, MainWindow.NativeTitle), MainWindow.QuitMessage, IntPtr.Zero, IntPtr.Zero);
+            Native.PostMessage(MainWindow.FindRunningWindow(), MainWindow.QuitMessage, IntPtr.Zero, IntPtr.Zero);
             Exit(); return;
         }
         bool smoke = Environment.GetCommandLineArgs().Contains("--smoke-test");
         instanceMutex = new Mutex(true, smoke ? "Local\\ThreeFingerWindowDrag.Smoke" : "Local\\ThreeFingerWindowDrag.1", out bool created);
         if (!created)
         {
-            Native.PostMessage(Native.FindWindow(null, MainWindow.NativeTitle), MainWindow.ShowMessage, IntPtr.Zero, IntPtr.Zero);
+            Native.PostMessage(MainWindow.FindRunningWindow(), MainWindow.ShowMessage, IntPtr.Zero, IntPtr.Zero);
             Exit(); return;
         }
         window = new MainWindow();
