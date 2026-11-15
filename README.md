@@ -22,7 +22,7 @@ Choose the installer or the portable ZIP from [GitHub Releases](https://github.c
 
 | File | How to use it |
 | --- | --- |
-| `Glide-3.0.0-Setup.exe` | Run the installer. You can enable launch at sign-in during setup or under **Convenience** in Glide. |
+| `Glide-3.0.1-Setup.exe` | Run the installer. You can enable launch at sign-in during setup or under **Convenience** in Glide. |
 | `ThreeFingerWindowDrag-portable.zip` | Extract the entire archive into a folder and run `ThreeFingerWindowDrag.exe`. |
 
 Both downloads include the .NET and WinUI runtimes.
@@ -40,6 +40,8 @@ Both downloads include the .NET and WinUI runtimes.
 1. Select **Open touchpad settings** in Glide's first-launch dialog.
 2. In Windows, open **Settings → Bluetooth & devices → Touchpad → Three-finger gestures**. Set both **Swipes** and **Taps** to **Nothing** so Windows does not perform its own actions during a Glide gesture.
 3. In Glide, select **Get started**. Hover over a window and slide three fingers across the touchpad.
+
+Choose English or Korean under **Language** in Glide. The change takes effect immediately and is saved for future launches.
 
 ## Gestures
 
