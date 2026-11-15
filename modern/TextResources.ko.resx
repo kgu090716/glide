@@ -17,7 +17,6 @@
   <data name="RestartAsAdministrator" xml:space="preserve"><value>관리자 권한으로 다시 시작</value></data>
   <data name="Language" xml:space="preserve"><value>언어</value></data>
   <data name="LanguageDescription" xml:space="preserve"><value>Glide의 화면과 트레이 메뉴에 사용할 언어를 선택합니다.</value></data>
-  <data name="WindowsLanguage" xml:space="preserve"><value>Windows 언어 사용</value></data>
   <data name="DragSettings" xml:space="preserve"><value>드래그 설정</value></data>
   <data name="FollowCursor" xml:space="preserve"><value>커서도 함께 이동</value></data>
   <data name="FollowCursorHelp" xml:space="preserve"><value>창 안에서 커서가 가리키던 위치를 유지합니다.</value></data>

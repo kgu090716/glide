@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ThreeFingerWindowDrag
 {
-    internal enum AppLanguage { System, English, Korean }
+    internal enum AppLanguage { English = 1, Korean = 2 }
 
     internal sealed class Settings
     {
@@ -24,7 +24,9 @@ namespace ThreeFingerWindowDrag
         public bool DirectionalResize = true;
         public double ResizeHoldSeconds = 1;
         public ResizeBehavior ResizeBehavior = ResizeBehavior.Grow;
-        public AppLanguage Language = AppLanguage.System;
+        public AppLanguage Language = DefaultLanguage;
+        internal static AppLanguage DefaultLanguage => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ko"
+            ? AppLanguage.Korean : AppLanguage.English;
         internal bool NeedsWelcome { get { return !OnboardingShown && !SetupDone; } }
         internal DirectionalResizeOptions ResizeOptions { get { return new DirectionalResizeOptions {
             Enabled = DirectionalResize, HoldMilliseconds = (int)Math.Round(ResizeTiming.NormalizeSeconds(ResizeHoldSeconds) * 1000),

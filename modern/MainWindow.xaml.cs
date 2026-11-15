@@ -51,7 +51,6 @@ public sealed partial class MainWindow : Window
         NeedsWelcome = settings.NeedsWelcome;
         uiCulture = ResolveCulture(settings.Language);
         InitializeComponent();
-        LanguageCombo.SelectedIndex = (int)settings.Language;
         VersionText.Text = $"Glide {AppVersion} · WinUI 3";
         ApplyWindowLanguage();
         ExtendsContentIntoTitleBar = true;
@@ -124,12 +123,8 @@ public sealed partial class MainWindow : Window
         else if (NeedsWelcome) Root.Loaded += async (_, _) => await ShowWelcomeAsync();
     }
 
-    private static CultureInfo ResolveCulture(AppLanguage language)
-    {
-        bool korean = language == AppLanguage.Korean ||
-            (language == AppLanguage.System && CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ko");
-        return CultureInfo.GetCultureInfo(korean ? "ko-KR" : "en-US");
-    }
+    private static CultureInfo ResolveCulture(AppLanguage language) =>
+        CultureInfo.GetCultureInfo(language == AppLanguage.Korean ? "ko-KR" : "en-US");
 
     private string Localize(string key) => TextResources.GetString(key, uiCulture);
 
@@ -142,16 +137,19 @@ public sealed partial class MainWindow : Window
     private void ApplyWindowLanguage()
     {
         Root.Language = uiCulture.Name;
-        string title = uiCulture.TwoLetterISOLanguageName == "ko" ? NativeTitle : EnglishWindowTitle;
+        bool korean = settings.Language == AppLanguage.Korean;
+        string title = korean ? NativeTitle : EnglishWindowTitle;
         Title = smoke ? title + " (Test)" : title;
         AdministratorStatus.Text = Localize(ElevationSupport.IsElevated ? "AdministratorActive" : "AdministratorHelp");
+        EnglishLanguageItem.IsChecked = !korean;
+        KoreanLanguageItem.IsChecked = korean;
+        LanguageButton.Content = korean ? KoreanLanguageItem.Text : EnglishLanguageItem.Text;
     }
 
-    private void LanguageChanged(object sender, SelectionChangedEventArgs e)
+    private void LanguageItemClicked(object sender, RoutedEventArgs e)
     {
-        if (!ready || LanguageCombo.SelectedIndex < 0) return;
-        var language = (AppLanguage)LanguageCombo.SelectedIndex;
-        if (settings.Language == language) return;
+        var language = ReferenceEquals(sender, EnglishLanguageItem) ? AppLanguage.English : AppLanguage.Korean;
+        if (!ready || settings.Language == language) return;
         settings.Language = language;
         uiCulture = ResolveCulture(language);
         ApplyWindowLanguage();
@@ -666,24 +664,36 @@ public sealed partial class MainWindow : Window
 
     private async Task CheckLanguageAsync(string directory)
     {
+        var menu = (MenuFlyout)LanguageButton.Flyout;
+        if (menu.Items.Count != 2 || !KoreanLanguageItem.IsChecked || !Equals(LanguageButton.Content, "한국어"))
+            throw new Exception("The language picker did not start with two choices and the current language selected.");
+        menu.ShowAt(LanguageButton);
+        try
+        {
+            await Task.Delay(220);
+            var anchor = LanguageButton.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
+            var item = EnglishLanguageItem.TransformToVisual(Root).TransformPoint(new Windows.Foundation.Point());
+            if (item.Y < anchor.Y + LanguageButton.ActualHeight - 2 || item.X > anchor.X + LanguageButton.ActualWidth)
+                throw new Exception($"The language menu did not open below the button. Button {anchor}, item {item}.");
+        }
+        finally { menu.Hide(); }
+
         ShowNotice("HotkeyFailed", "HotkeyHelp", InfoBarSeverity.Informational, localizeMessage: true);
-        LanguageCombo.SelectedIndex = (int)AppLanguage.English;
+        LanguageItemClicked(EnglishLanguageItem, new RoutedEventArgs());
         await Task.Delay(80);
         if (settings.Language != AppLanguage.English || Root.Language != "en-US" ||
             !Title.StartsWith(EnglishWindowTitle, StringComparison.Ordinal) || !Equals(FollowSwitch.OnContent, "On") ||
             !Equals(ResizeHoldBox.Header, "Hold time (seconds)") || Notice.Title != "Could not register the shortcut" ||
-            CreateWelcomeDialog().PrimaryButtonText != "Get started")
+            CreateWelcomeDialog().PrimaryButtonText != "Get started" || !EnglishLanguageItem.IsChecked ||
+            KoreanLanguageItem.IsChecked || !Equals(LanguageButton.Content, "English"))
             throw new Exception("Changing the language did not update the English interface.");
         Notice.IsOpen = false;
         await SavePreviewAsync(directory, "language-english.png", ElementTheme.Light);
 
-        LanguageCombo.SelectedIndex = (int)AppLanguage.System;
-        if (Root.Language != ResolveCulture(AppLanguage.System).Name)
-            throw new Exception("The Windows language option did not resolve the system language.");
-
-        LanguageCombo.SelectedIndex = (int)AppLanguage.Korean;
+        LanguageItemClicked(KoreanLanguageItem, new RoutedEventArgs());
         if (settings.Language != AppLanguage.Korean || Root.Language != "ko-KR" || !Equals(FollowSwitch.OnContent, "켬") ||
-            CreateWelcomeDialog().PrimaryButtonText != "시작하기")
+            CreateWelcomeDialog().PrimaryButtonText != "시작하기" || EnglishLanguageItem.IsChecked ||
+            !KoreanLanguageItem.IsChecked || !Equals(LanguageButton.Content, "한국어"))
             throw new Exception("Changing the language did not restore the Korean interface.");
     }
 }

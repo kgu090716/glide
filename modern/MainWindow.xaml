@@ -51,19 +51,21 @@
                     </InfoBar>
 
                     <Border Style="{StaticResource SettingsCard}">
-                        <Grid ColumnSpacing="20">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel Spacing="12">
                             <StackPanel Spacing="5">
                                 <TextBlock Text="{x:Bind Localize('Language')}" FontSize="14" FontWeight="SemiBold" />
                                 <TextBlock Text="{x:Bind Localize('LanguageDescription')}" Style="{StaticResource MutedText}" />
                             </StackPanel>
-                            <ComboBox x:Name="LanguageCombo" Grid.Column="1" VerticalAlignment="Center"
-                                      AutomationProperties.Name="{x:Bind Localize('Language')}" SelectionChanged="LanguageChanged">
-                                <ComboBoxItem Content="{x:Bind Localize('WindowsLanguage')}" />
-                                <ComboBoxItem Content="English" />
-                                <ComboBoxItem Content="한국어" />
-                            </ComboBox>
-                        </Grid>
+                            <DropDownButton x:Name="LanguageButton" HorizontalAlignment="Left" MinWidth="120"
+                                            AutomationProperties.Name="{x:Bind Localize('Language')}">
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <RadioMenuFlyoutItem x:Name="EnglishLanguageItem" Text="English" Click="LanguageItemClicked" />
+                                        <RadioMenuFlyoutItem x:Name="KoreanLanguageItem" Text="한국어" Click="LanguageItemClicked" />
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
+                        </StackPanel>
                     </Border>
 
                     <StackPanel Spacing="10">

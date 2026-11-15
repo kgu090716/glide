@@ -17,7 +17,6 @@
   <data name="RestartAsAdministrator" xml:space="preserve"><value>Restart as administrator</value></data>
   <data name="Language" xml:space="preserve"><value>Language</value></data>
   <data name="LanguageDescription" xml:space="preserve"><value>Choose the language for Glide and its tray menu.</value></data>
-  <data name="WindowsLanguage" xml:space="preserve"><value>Use Windows language</value></data>
   <data name="DragSettings" xml:space="preserve"><value>Drag settings</value></data>
   <data name="FollowCursor" xml:space="preserve"><value>Move the cursor too</value></data>
   <data name="FollowCursorHelp" xml:space="preserve"><value>Keep the cursor at the same position inside the window.</value></data>

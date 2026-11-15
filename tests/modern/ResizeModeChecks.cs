@@ -36,14 +36,16 @@ namespace ThreeFingerWindowDrag
                 var loaded = Settings.Load();
                 Require(loaded.ResizeHoldSeconds == .6 && loaded.ResizeOptions.HoldMilliseconds == 600 && loaded.ResizeBehavior == ResizeBehavior.LowerCorners, "saved mode/time did not round trip");
                 Require(loaded.Language == AppLanguage.English, "the selected language did not round trip");
-                File.WriteAllText(path, "SetupDone=true\nResizeBehavior=Shrink\n");
-                Require(Settings.Load().ResizeBehavior == ResizeBehavior.LowerCorners, "previous selection did not migrate to lower corners");
+                File.WriteAllText(path, "SetupDone=true\nResizeBehavior=Shrink\nLanguage=System\n");
+                loaded = Settings.Load();
+                Require(loaded.ResizeBehavior == ResizeBehavior.LowerCorners, "previous selection did not migrate to lower corners");
+                Require(loaded.Language == Settings.DefaultLanguage, "previous system preference did not resolve to a supported language");
                 File.WriteAllText(path, "SetupDone=true\nResizeHoldSeconds=0.6000000015\n"); loaded = Settings.Load();
                 Require(loaded.ResizeHoldSeconds == .6 && loaded.ResizeBehavior == ResizeBehavior.Grow && !loaded.NeedsWelcome, "old settings changed resize mode");
-                Require(loaded.Language == AppLanguage.System, "older settings should follow Windows language");
+                Require(loaded.Language == Settings.DefaultLanguage, "older settings should default to a supported language");
                 File.WriteAllText(path, "ResizeBehavior=999\nLanguage=999\n"); loaded = Settings.Load();
                 Require(loaded.ResizeBehavior == ResizeBehavior.Grow, "invalid behavior was accepted");
-                Require(loaded.Language == AppLanguage.System, "invalid language should fall back to Windows language");
+                Require(loaded.Language == Settings.DefaultLanguage, "invalid language should fall back to a supported language");
             }
             finally { if (backup == null) File.Delete(path); else File.WriteAllBytes(path, backup); }
         }
