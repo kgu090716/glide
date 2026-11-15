@@ -148,8 +148,13 @@ public sealed partial class MainWindow : Window
 
     private void LanguageItemClicked(object sender, RoutedEventArgs e)
     {
+        if (!ready) return;
         var language = ReferenceEquals(sender, EnglishLanguageItem) ? AppLanguage.English : AppLanguage.Korean;
-        if (!ready || settings.Language == language) return;
+        if (settings.Language == language)
+        {
+            SaveSettings();
+            return;
+        }
         settings.Language = language;
         uiCulture = ResolveCulture(language);
         ApplyWindowLanguage();
