@@ -1,0 +1,9 @@
+{
+  "duration": 42.1,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#drag h1", "bySec": 0 },
+    { "kind": "staysInFrame", "selector": "#drag .finger:nth-of-type(4)" },
+    { "kind": "staysInFrame", "selector": "#hold .finger:nth-of-type(4)" },
+    { "kind": "keepsMoving", "maxStaticSec": 3.2 }
+  ]
+}

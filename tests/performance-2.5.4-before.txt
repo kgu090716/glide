@@ -1,0 +1,4 @@
+Preallocated three-contact frames; native window I/O excluded.
+Frames: 100000; allocated bytes: 0; bytes/frame: 0.00
+Elapsed ms: 38.81; microseconds/frame: 0.388
+HID decode + frame assembly (native I/O excluded): reports=100000; allocated bytes=32000000; elapsed ms=223.68

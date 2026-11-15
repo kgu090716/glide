@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>ThreeFingerWindowDrag</RootNamespace>
+    <AssemblyName>ThreeFingerWindowDrag</AssemblyName>
+    <ApplicationManifest>..\app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>3.0.0</Version>
+    <Description>Three-finger window dragging with a WinUI 3 Fluent 2 interface.</Description>
+    <ApplicationIcon>Assets\Glide.ico</ApplicationIcon>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <RestorePackagesPath>..\.tools\packages</RestorePackagesPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Assets\Glide.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.5.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\src\Native.cs" Link="Input\Native.cs" />
+    <Compile Include="..\src\WindowMessages.cs" Link="Input\WindowMessages.cs" />
+    <Compile Include="..\src\Touchpad.cs" Link="Input\Touchpad.cs" />
+    <Compile Include="..\src\Gesture.cs" Link="Input\Gesture.cs" />
+    <Compile Include="..\src\DirectionalResize.cs" Link="Input\DirectionalResize.cs" />
+    <Compile Include="..\src\WindowMover.cs" Link="Input\WindowMover.cs" />
+    <Compile Include="..\src\LatestMoveDispatcher.cs" Link="Input\LatestMoveDispatcher.cs" />
+    <Compile Include="..\src\InputController.cs" Link="Input\InputController.cs" />
+    <Compile Include="..\src\Settings.cs" Link="Settings.cs" />
+    <Compile Include="..\src\WindowPolicy.cs" Link="Input\WindowPolicy.cs" />
+    <Compile Include="..\src\TopEdgePolicy.cs" Link="Input\TopEdgePolicy.cs" />
+    <Compile Include="..\src\WindowLayoutPolicy.cs" Link="Input\WindowLayoutPolicy.cs" />
+    <Compile Include="..\src\SnapRestoreMemory.cs" Link="Input\SnapRestoreMemory.cs" />
+    <Compile Include="..\src\FlickRecognizer.cs" Link="Input\FlickRecognizer.cs" />
+    <Compile Include="..\src\ResizeGeometry.cs" Link="Input\ResizeGeometry.cs" />
+    <Compile Include="..\src\ForegroundActivation.cs" Link="Input\ForegroundActivation.cs" />
+    <Compile Include="..\src\StartupRegistration.cs" Link="StartupRegistration.cs" />
+    <Compile Include="..\src\ElevationSupport.cs" Link="Input\ElevationSupport.cs" />
+  </ItemGroup>
+</Project>

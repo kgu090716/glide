@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ko" data-composition-variables='[{"id":"name","type":"string","label":"프로그램 이름","default":"Glide"},{"id":"features","type":"string","label":"기능 설명","default":"창 이동 · 크기 조절 · 화면 배치"}]'>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Glide | 프로그램 소개</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    @font-face {
+      font-family: "Glide Korean";
+      src: local("Malgun Gothic");
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: "Glide Korean";
+      src: local("Malgun Gothic Bold"), local("Malgun Gothic");
+      font-weight: 700;
+    }
+    :root {
+      --ink: #182642;
+      --muted: #45597b;
+      --accent: #5055d9;
+      --touch: #246ed6;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; }
+    body { color: var(--ink); font-family: "Glide Korean", sans-serif; background: #f1f4fa; }
+    #root { position: relative; width: 100%; height: 100%; }
+    #ground {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, #fbfcff 0%, #f1f4f9 48%, #e7eef8 100%);
+    }
+    #intro-layout { position: absolute; inset: 0; }
+    #copy { position: absolute; top: 292px; left: 192px; right: 1040px; }
+    #brand {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      width: fit-content;
+      margin: 0 0 40px;
+    }
+    #app-icon { display: block; width: 104px; height: 104px; object-fit: contain; }
+    #name {
+      margin: -12px 0 0;
+      font: 700 134px/.94 Inter, sans-serif;
+      letter-spacing: -.083em;
+    }
+    #headline {
+      font-size: 53px;
+      line-height: 1.24;
+      letter-spacing: -.06em;
+      margin: 0;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    #headline span { display: block; }
+    #headline span:first-child { color: var(--accent); }
+    #functions {
+      width: fit-content;
+      border-top: 2px solid #d1d9ee;
+      margin: 30px 0 0;
+      padding-top: 22px;
+      color: var(--muted);
+      font-size: 29px;
+      line-height: 1.3;
+      letter-spacing: -.025em;
+    }
+    #diagram { position: absolute; top: 233px; left: 883px; width: 845px; height: 632px; }
+    #desktop {
+      position: absolute;
+      overflow: hidden;
+      isolation: isolate;
+      top: 52px;
+      right: 0;
+      width: 722px;
+      height: 442px;
+      border-radius: 28px;
+      border: 2px solid #b8c8e2;
+      background: linear-gradient(145deg, #cfdef7 0%, #e4effc 52%, #c8daf8);
+      box-shadow: 0 22px 55px #233e732e;
+    }
+    #desktop::before {
+      content: "";
+      position: absolute;
+      width: 680px;
+      height: 490px;
+      left: 234px;
+      top: 23px;
+      border-radius: 45%;
+      transform: rotate(-34deg);
+      background: linear-gradient(140deg, #7199d82e, #a5bdf209 76%);
+    }
+    #taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 42px;
+      background: #eef5ffeb;
+      border-top: 1px solid #aebfdd;
+      display: grid;
+      place-items: center;
+    }
+    #tiles {
+      display: grid;
+      gap: 2px;
+      grid-template-columns: repeat(2, 7px);
+      grid-template-rows: repeat(2, 7px);
+    }
+    #tiles i { background: #235fb9; }
+    #carried { position: absolute; top: 112px; left: 128px; width: 397px; height: 225px; }
+    #window {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 1.5px solid #7095c9;
+      border-radius: 12px;
+      background: #fcfdff;
+      box-shadow: 0 11px 24px #1a3d6942;
+    }
+    #window-bar {
+      height: 43px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #3c5577;
+      background: #edf4fe;
+      border-bottom: 1px solid #ccdbee;
+      padding: 0 13px;
+    }
+    #file-icon { width: 13px; height: 17px; border: 1.5px solid #5486c8; border-radius: 2px; }
+    #window-controls { display: flex; align-items: center; gap: 17px; }
+    #window-controls i:first-child { width: 10px; height: 1.5px; background: #6381a9; }
+    #window-controls i:nth-child(2) { width: 10px; height: 10px; border: 1.5px solid #6381a9; }
+    #window-controls i:last-child { width: 12px; height: 12px; position: relative; }
+    #window-controls i:last-child::before, #window-controls i:last-child::after { content: ""; position: absolute; top: 5px; width: 12px; height: 1.5px; background: #6381a9; transform: rotate(45deg); }
+    #window-controls i:last-child::after { transform: rotate(-45deg); }
+    #mock-lines { display: grid; gap: 14px; margin: 30px; }
+    #mock-lines i { width: 185px; height: 7px; border-radius: 4px; background: #d8e4f4; }
+    #mock-lines i:first-child { width: 128px; height: 11px; margin-bottom: 5px; background: #b3c9e9; }
+    #mock-lines i:nth-child(3) { width: 220px; }
+    #mock-lines i:nth-child(4) { width: 160px; }
+    #pointer {
+      position: absolute;
+      left: 222px;
+      top: 119px;
+      width: 32px;
+      height: 38px;
+      background: #20395b;
+      clip-path: polygon(2% 0, 98% 66%, 66% 69%, 87% 96%, 64% 100%, 42% 77%, 14% 98%);
+    }
+    #pad {
+      position: absolute;
+      top: 355px;
+      left: 0;
+      width: 324px;
+      height: 247px;
+      overflow: hidden;
+      isolation: isolate;
+      border: 2px solid #c6d3e8;
+      border-radius: 28px;
+      background: linear-gradient(151deg, #fff, #edf1f9 69%, #e1e9f7);
+      box-shadow: 0 14px 34px #243a682c, inset 0 1px 2px #fff;
+    }
+    #pad::before { content: ""; position: absolute; inset: 15px; border: 1px solid #dde5f2; border-radius: 17px; }
+    #pad-dots { position: absolute; inset: 30px; opacity: .5; background: radial-gradient(#a9bad9 1px, transparent 1.4px); background-size: 20px 20px; }
+    #fingers { position: absolute; inset: 0; }
+    .finger {
+      position: absolute;
+      width: 39px;
+      height: 39px;
+      background: #bee1ffbc;
+      box-shadow: 0 0 0 5px #448fff21;
+      border: 2.5px solid var(--touch);
+      border-radius: 50%;
+    }
+    .finger::after { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: var(--touch); }
+    .finger:nth-child(1) { left: 89px; top: 134px; }
+    .finger:nth-child(2) { left: 138px; top: 86px; }
+    .finger:nth-child(3) { left: 187px; top: 134px; }
+  </style>
+</head>
+<body>
+  <main id="root" data-composition-id="glide-intro" data-start="0" data-duration="4.3" data-width="1920" data-height="1080">
+    <div id="ground" aria-hidden="true"></div>
+    <section id="intro-layout" class="clip" data-start="0" data-duration="4.3" data-track-index="0" data-track-kind="graphics">
+      <div id="copy">
+        <div id="brand">
+          <img id="app-icon" width="104" height="104" src="assets/glide-icon.png" alt="">
+          <h1 id="name" data-var-text="name">Glide</h1>
+        </div>
+        <p id="headline"><span>세 손가락으로</span><span>Windows 창을 움직이세요.</span></p>
+        <p id="functions" data-var-text="features">창 이동 · 크기 조절 · 화면 배치</p>
+      </div>
+      <div id="diagram" role="img" aria-label="트랙패드의 세 접점이 움직이자 화면 속 창과 커서가 따라 움직임">
+        <div id="desktop" data-layout-allow-overlap data-layout-allow-occlusion>
+          <div id="taskbar"><span id="tiles"><i></i><i></i><i></i><i></i></span></div>
+          <div id="carried">
+            <div id="window">
+              <div id="window-bar"><span id="file-icon"></span><span id="window-controls"><i></i><i></i><i></i></span></div>
+              <div id="mock-lines"><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div id="pointer" data-layout-allow-overlap></div>
+          </div>
+        </div>
+        <div id="pad" data-layout-allow-overlap>
+          <div id="pad-dots"></div>
+          <div id="fingers"><i class="finger"></i><i class="finger"></i><i class="finger"></i></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const timeline = gsap.timeline({ paused: true });
+    timeline.fromTo("#brand", { x: -13, opacity: .78 }, { x: 0, opacity: 1, duration: .56, ease: "power3.out" }, 0);
+    timeline.fromTo("#headline", { opacity: .68 }, { opacity: 1, duration: .40, ease: "sine.out" }, .13);
+    timeline.fromTo("#functions", { y: 7, opacity: .62 }, { y: 0, opacity: 1, duration: .43, ease: "power2.out" }, .32);
+    timeline.fromTo("#diagram", { x: 14, opacity: .91 }, { x: 0, opacity: 1, duration: .55, ease: "power2.out" }, 0);
+    timeline.fromTo(".finger", { opacity: .40 }, { opacity: 1, duration: .20, ease: "sine.out" }, .68);
+    timeline.fromTo(".finger", { x: 0, y: 0 }, { x: 64, y: -39, duration: 1.24, ease: "power2.inOut" }, 1.02);
+    timeline.fromTo("#carried", { x: 0, y: 0 }, { x: 119, y: -71, duration: 1.24, ease: "power2.inOut" }, 1.02);
+    timeline.to(".finger", { opacity: 0, duration: .24, ease: "sine.out" }, 2.57);
+    timeline.set("#root", { "--settled": "1" }, 4.3);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["glide-intro"] = timeline;
+  </script>
+</body>
+</html>

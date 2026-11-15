@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Glide 제스처 가이드</title>
+  <link rel="stylesheet" href="guide.css">
+  <script src="assets/gsap.min.js"></script>
+</head>
+<body>
+  <main id="root" data-composition-id="glide-gestures" data-start="0" data-duration="42.1" data-width="1920" data-height="1080">
+    <section id="drag" class="clip scene" data-gesture="drag" data-start="0" data-duration="4.6" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>창 이동</h1>
+        <p>세 손가락을 나란히 움직이면 창이 따라옵니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="spread" class="clip scene" data-gesture="spread" data-start="4.6" data-duration="4.2" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>창 확대</h1>
+        <p>세 손가락을 펼치면 창의 가로와 세로가 커집니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="pinch" class="clip scene" data-gesture="pinch" data-start="8.8" data-duration="4.2" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>창 축소</h1>
+        <p>세 손가락을 오므리면 창의 가로와 세로가 작아집니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="hold" class="clip scene" data-gesture="hold" data-start="13" data-duration="5.7" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>방향별 크기 조절</h1>
+        <p>세 손가락을 올려둔 뒤 밀어 테두리를 조절합니다. 대기 시간은 바꿀 수 있습니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="maximize" class="clip scene" data-gesture="maximize" data-start="18.7" data-duration="4.8" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>위쪽 끝에서 최대화</h1>
+        <p>창을 화면 위쪽 끝으로 끌고 손을 떼면 최대화됩니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="side-snap" class="clip scene" data-gesture="side-snap" data-start="23.5" data-duration="9.9" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>좌우 반쪽 배치</h1>
+        <p>화면 끝에 놓으면 절반에 맞고, 다시 끌면 원래 크기로 돌아옵니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+    <section id="flick" class="clip scene" data-gesture="flick" data-start="33.4" data-duration="8.7" data-track-index="0" data-track-kind="graphics">
+      <header class="intro">
+        <div class="brand"><span class="brand-mark"></span>Glide <small>제스처 가이드</small></div>
+        <h1>빠르게 밀어서 창 배치</h1>
+        <p>0.35초 안에 밀고 떼세요. 위는 최대화, 좌우는 반쪽 배치입니다.</p>
+      </header>
+      <div class="board">
+        <div class="input-panel">
+          <h2 class="panel-heading">트랙패드</h2>
+          <div class="pad" data-layout-allow-occlusion>
+            <div class="guide-line"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+            <div class="finger" aria-hidden="true"></div>
+          </div>
+          <p class="phase left-phase">세 손가락 준비</p>
+          <div class="progress"><i></i></div>
+        </div>
+        <span class="connector" aria-hidden="true"></span>
+        <div class="desktop-panel">
+          <h2 class="panel-heading">화면</h2>
+          <div class="screen" data-layout-allow-overflow data-layout-allow-occlusion>
+            <div class="zone" data-layout-allow-overlap></div>
+            <div class="model-window" data-layout-allow-overlap data-layout-allow-overflow>
+              <div class="window-bar">
+                <div class="window-label"><span class="file-icon"></span>메모장</div>
+                <div class="window-controls" aria-hidden="true"><span>−</span><span>□</span><span>×</span></div>
+              </div>
+              <div class="content" aria-hidden="true"><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i><i class="mock-line"></i></div>
+            </div>
+            <div class="pointer" data-layout-allow-overlap aria-hidden="true"></div>
+            <div class="taskbar" aria-hidden="true">
+              <span class="task-logo"><i></i><i></i><i></i><i></i></span><i class="task-app"></i>
+            </div>
+          </div>
+          <p class="phase right-phase">창의 위치와 크기</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="guide.js"></script>
+</body>
+</html>
