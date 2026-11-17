@@ -16,6 +16,12 @@ Glide lets you **move, resize, and snap windows with three fingers** on a Window
 
 [Watch the full gesture guide (MP4, 46 seconds)](docs/media/glide-gesture-guide-en.mp4)
 
+## App screenshot
+
+<p align="center">
+  <img src="docs/media/glide-screenshot-en.png" alt="Glide 3.0.2 settings in English, showing the language selector and drag settings" width="640">
+</p>
+
 ## Download and install
 
 Choose the installer or the portable ZIP from [GitHub Releases](https://github.com/kgu090716/glide/releases).

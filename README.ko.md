@@ -16,6 +16,12 @@ Windows 정밀 터치패드에서 **세 손가락으로 창을 옮기고, 크기
 
 [전체 제스처 영상 보기 (MP4, 46초)](docs/media/glide-gesture-guide.mp4)
 
+## 실제 실행 화면
+
+<p align="center">
+  <img src="docs/media/glide-screenshot-ko.png" alt="언어 선택과 드래그 설정이 표시된 Glide 3.0.2 한국어 다크 모드 화면" width="640">
+</p>
+
 ## 다운로드와 설치
 
 [GitHub Releases](https://github.com/kgu090716/glide/releases)에서 설치 파일 또는 포터블 압축 파일을 선택하세요.
