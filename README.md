@@ -22,8 +22,8 @@ Choose the installer or the portable ZIP from [GitHub Releases](https://github.c
 
 | File | How to use it |
 | --- | --- |
-| `Glide-3.0.1-Setup.exe` | Run the installer. You can enable launch at sign-in during setup or under **Convenience** in Glide. |
-| `ThreeFingerWindowDrag-portable.zip` | Extract the entire archive into a folder and run `ThreeFingerWindowDrag.exe`. |
+| `Glide-3.0.2-Setup.exe` | Run the installer. You can enable launch at sign-in during setup or under **Convenience** in Glide. |
+| `Glide-3.0.2-Portable.zip` | Extract the entire archive into a folder and run `ThreeFingerWindowDrag.exe`. |
 
 Both downloads include the .NET and WinUI runtimes.
 

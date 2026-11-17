@@ -71,7 +71,10 @@ namespace ThreeFingerWindowDrag
                 input.Frame += OnFrame;
                 input.Toggle += () => { Action handler = ToggleRequested; if (handler != null) handler(); };
                 input.InputFault += () => { engine.Cancel(); UpdateTimerInterval(); };
-                input.DevicesChanged += () => { engine.Cancel(); UpdateTimerInterval(); ReadDeviceDetails(); Publish(); };
+                input.DevicesChanged += () => {
+                    engine.Cancel(); engine.RemoveDisconnectedTouchpads(input.IsConnected);
+                    UpdateTimerInterval(); ReadDeviceDetails(); Publish();
+                };
                 ReadDeviceDetails();
                 UpdateTimerInterval();
                 Publish(); ready.Set();
@@ -191,7 +194,7 @@ namespace ThreeFingerWindowDrag
             });
         }
         internal void RefreshDevices()
-        { Post(() => { engine.Cancel(); UpdateTimerInterval(); input.RefreshDevices(); ReadDeviceDetails(); }); }
+        { Post(() => { engine.Cancel(); UpdateTimerInterval(); input.RefreshDevices(); engine.RemoveDisconnectedTouchpads(input.IsConnected); ReadDeviceDetails(); }); }
         public void Dispose()
         {
             if (stopping) return;

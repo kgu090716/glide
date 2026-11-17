@@ -17,7 +17,7 @@
     <PublishTrimmed>false</PublishTrimmed>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <Description>Three-finger window dragging with a WinUI 3 Fluent 2 interface.</Description>
     <ApplicationIcon>Assets\Glide.ico</ApplicationIcon>
     <EnableMsixTooling>true</EnableMsixTooling>

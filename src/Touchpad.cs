@@ -229,6 +229,7 @@ namespace ThreeFingerWindowDrag
         internal int DeviceCount { get { return devices.Count; } }
         internal long Now { get { return clock.ElapsedMilliseconds; } }
         internal IEnumerable<TouchpadDevice> Devices { get { return devices.Values; } }
+        internal bool IsConnected(IntPtr device) { return devices.ContainsKey(device); }
         internal RawTouchpad()
         {
             CreateHandle("ThreeFingerWindowDrag.Input");

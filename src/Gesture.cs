@@ -78,10 +78,12 @@ namespace ThreeFingerWindowDrag
     // All gesture state is confined to the input thread and one touchpad at a time.
     internal sealed class GestureEngine
     {
+        internal const int ThreeFingerConfirmationMs = 60;
         private readonly IWindowMover mover;
         private struct ContactSample { internal int Id; internal double X, Y; }
         private readonly ContactSample[] previous = new ContactSample[3];
-        private readonly List<Contact> active = new List<Contact>(4);
+        private readonly List<Contact> active = new List<Contact>(3);
+        private readonly HashSet<IntPtr> touchpadsAwaitingLift = new HashSet<IntPtr>();
         private bool hasPrevious;
         private IntPtr owner;
         private long lastTime, contactStarted;
@@ -111,6 +113,11 @@ namespace ThreeFingerWindowDrag
         {
             mover.Release(); Reset(); blocked = true;
         }
+        internal void RemoveDisconnectedTouchpads(Predicate<IntPtr> isConnected)
+        {
+            if (touchpadsAwaitingLift.Count != 0)
+                touchpadsAwaitingLift.RemoveWhere(device => !isConnected(device));
+        }
         private void Reset()
         {
             hasPrevious = false; active.Clear(); owner = IntPtr.Zero;
@@ -131,15 +138,35 @@ namespace ThreeFingerWindowDrag
         }
         public void Process(ContactFrame frame, long now, bool cancel)
         {
-            if (owner != IntPtr.Zero && owner != frame.Device && hasPrevious && now - lastTime <= 450) return;
-            if (cancel || !Enabled) { Cancel(); return; }
-            active.Clear(); bool palm = false;
+            bool trackingOtherTouchpad = hasPrevious && owner != frame.Device && now - lastTime <= 450;
+            active.Clear();
+            bool palm = false;
+            int tips = 0;
             foreach (Contact contact in frame.Contacts)
             {
                 if (!contact.Tip) continue;
+                tips++;
                 if (!contact.Confident) palm = true;
-                else active.Add(contact);
+                else if (active.Count < 3) active.Add(contact);
             }
+            if (touchpadsAwaitingLift.Contains(frame.Device))
+            {
+                if (tips != 0) return;
+                touchpadsAwaitingLift.Remove(frame.Device);
+            }
+            if (tips > 3)
+            {
+                // The remaining three fingers of a four-finger gesture cannot start or finish a Glide gesture.
+                touchpadsAwaitingLift.Add(frame.Device);
+                if (hasPrevious && !trackingOtherTouchpad)
+                {
+                    mover.Release();
+                    Reset();
+                }
+                return;
+            }
+            if (trackingOtherTouchpad) return;
+            if (cancel || !Enabled) { Cancel(); return; }
             if (active.Count != 3 || palm)
             {
                 if (captured && active.Count < 3 && !palm)
@@ -204,6 +231,8 @@ namespace ThreeFingerWindowDrag
             }
             if (!captured)
             {
+                // Keep measuring from touchdown while waiting for a possible fourth finger.
+                if (now - contactStarted < ThreeFingerConfirmationMs) return;
                 if (!mover.Capture(mode == GestureMode.Move)) { Cancel(); return; }
                 captured = true;
                 ResizeReady = false;

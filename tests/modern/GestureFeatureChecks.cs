@@ -6,6 +6,7 @@ namespace ThreeFingerWindowDrag
 {
     internal static class GestureFeatureChecks
     {
+        private const int ConfirmMs = GestureEngine.ThreeFingerConfirmationMs;
         [DllImport("user32.dll")] private static extern IntPtr GetWindow(IntPtr window, uint command);
         private static void Require(bool value, string error) { if (!value) throw new Exception(error); }
         private static ContactFrame Triangle(double scale = 1, double dx = 0, double dy = 0)
@@ -18,37 +19,38 @@ namespace ThreeFingerWindowDrag
         internal static void PinchExpandsAndContracts()
         {
             var mover = new FakeMover(); var engine = new GestureEngine(mover);
-            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),10,false);
+            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),ConfirmMs,false);
             Require(engine.Resizing && mover.Resizes == 1 && Math.Abs(mover.Scale-1.2)<0.000001 && mover.Moves == 0, "spread was not resize");
-            engine.Process(Triangle(0.8),20,false);
+            engine.Process(Triangle(0.8),ConfirmMs + 10,false);
             Require(engine.Resizing && Math.Abs(mover.Scale-0.8)<0.000001 && mover.Moves == 0, "contraction was not resize");
             Require(mover.Prepares == 1 && mover.Captures == 1,"resize reselected its target");
         }
         internal static void PinchCanBeDisabled()
         {
             var mover=new FakeMover(); var engine=new GestureEngine(mover) { PinchResizeEnabled=false };
-            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),10,false);
+            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),ConfirmMs,false);
             Require(mover.Resizes==0 && mover.Captures==0,"disabled pinch resized");
-            engine.Process(Triangle(1.2,1),20,false);
+            engine.Process(Triangle(1.2,1),ConfirmMs + 10,false);
             Require(mover.Moves>0 && !engine.Resizing,"disabled pinch prevented normal drag");
             mover=new FakeMover { SupportsResize=false }; engine=new GestureEngine(mover);
-            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),10,false);
+            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.2),ConfirmMs,false);
             Require(mover.Resizes==0,"fixed-size target resized");
         }
         internal static void ModeLockAndJitter()
         {
             var mover=new FakeMover(); var engine=new GestureEngine(mover);
-            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.01,0.1),10,false);
+            engine.Process(Triangle(),0,false); engine.Process(Triangle(1.01,0.1),ConfirmMs,false);
             Require(mover.Captures==0,"small jitter activated gesture");
-            engine.Process(Triangle(1,1),20,false);
+            engine.Process(Triangle(1,1),ConfirmMs + 10,false);
             Require(mover.Moves>0 && !engine.Resizing,"translation classified as pinch");
-            engine.Process(Triangle(1.3,2),30,false);
+            engine.Process(Triangle(1.3,2),ConfirmMs + 20,false);
             Require(mover.Resizes==0 && !engine.Resizing,"drag changed into resize midway");
-            engine.Process(new ContactFrame { Device=new IntPtr(1) },40,false);
-            engine.Process(Triangle(),50,false); engine.Process(Triangle(0.8),60,false);
+            engine.Process(new ContactFrame { Device=new IntPtr(1) },ConfirmMs + 30,false);
+            int nextTouch = ConfirmMs + 40;
+            engine.Process(Triangle(),nextTouch,false); engine.Process(Triangle(0.8),nextTouch + ConfirmMs,false);
             Require(engine.Resizing,"new gesture did not reclassify");
-            int count=mover.Resizes; engine.Process(Triangle(0.8),70,true);
-            engine.Process(Triangle(1.1),80,false);
+            int count=mover.Resizes; engine.Process(Triangle(0.8),nextTouch + ConfirmMs + 10,true);
+            engine.Process(Triangle(1.1),nextTouch + ConfirmMs + 20,false);
             Require(!engine.Resizing && mover.Resizes==count,"Escape did not stop pinch");
         }
         internal static void GeometryAndBounds()

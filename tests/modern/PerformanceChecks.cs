@@ -73,12 +73,13 @@ namespace ThreeFingerWindowDrag
             for (int i = 0; i < 3; i++) frame.Contacts.Add(new Contact { Id = i, X = 20 + i * 10, Y = 20, Tip = true, Confident = true });
             engine.Process(frame, 0, false);
             foreach (Contact contact in frame.Contacts) contact.X += .8;
-            frame.Contacts.Reverse(); engine.Process(frame, 10, false);
+            int confirmed = GestureEngine.ThreeFingerConfirmationMs;
+            frame.Contacts.Reverse(); engine.Process(frame, confirmed, false);
             if (mover.Moves != 1 || mover.X != 10) throw new Exception("Contact reordering or object reuse lost movement.");
             foreach (Contact contact in frame.Contacts) contact.X += .4;
-            engine.Process(frame, 20, false);
+            engine.Process(frame, confirmed + 10, false);
             if (mover.Captures != 1 || mover.X != 14) throw new Exception("Reused contact objects changed the previous sample.");
-            frame.Contacts[1].Id = frame.Contacts[0].Id; engine.Process(frame, 30, false);
+            frame.Contacts[1].Id = frame.Contacts[0].Id; engine.Process(frame, confirmed + 20, false);
             if (engine.Tracking || engine.Dragging || mover.Moves != 2) throw new Exception("Duplicate contacts did not cancel safely.");
         }
     }

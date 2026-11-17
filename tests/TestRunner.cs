@@ -28,6 +28,7 @@ namespace ThreeFingerWindowDrag
     }
     internal static class TestRunner
     {
+        private const int ConfirmMs = GestureEngine.ThreeFingerConfirmationMs;
         [DllImport("hid.dll")] private static extern int HidP_InitializeReportForID(int type, byte id, IntPtr preparsed, byte[] report, uint length);
         [DllImport("hid.dll")] private static extern int HidP_SetData(int type, [In, Out] Native.HidData[] data, ref uint count, IntPtr preparsed, byte[] report, uint length);
         private static int passed;
@@ -159,17 +160,25 @@ namespace ThreeFingerWindowDrag
                 });
                 Test("three fingers lock target on contact and activate after movement threshold", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(0.2),10,false);
+                    e.Process(F(0),0,false); e.Process(F(0.2),ConfirmMs,false);
                     Check(m.Prepares == 1 && m.Captures == 0, "threshold ignored");
-                    e.Process(F(1),20,false);
+                    e.Process(F(1),ConfirmMs + 10,false);
                     Check(m.Captures == 1 && m.X == 12 && e.Dragging, "movement wrong");
-                    e.Process(F(2),30,false);
+                    e.Process(F(2),ConfirmMs + 20,false);
                     Check(m.Prepares == 1 && m.Captures == 1 && m.X == 24, "target reselected");
+                });
+                Test("three fingers start after confirmation without losing early movement", delegate {
+                    var m = new FakeMover(); var e = new GestureEngine(m);
+                    e.Process(F(0),0,false);
+                    e.Process(F(2),ConfirmMs - 1,false);
+                    Check(m.Captures == 0 && m.Moves == 0, "movement started before the contact count settled");
+                    e.Process(F(2),ConfirmMs,false);
+                    Check(e.Dragging && m.X == 24 && m.Prepares == 1, "early movement or target was lost");
                 });
                 Test("lifting one finger stops immediately", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false);
-                    int moves = m.Moves; e.Process(F(2,2),20,false); e.Process(F(5,2),30,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false);
+                    int moves = m.Moves; e.Process(F(2,2),ConfirmMs + 10,false); e.Process(F(5,2),ConfirmMs + 20,false);
                     Check(!e.Dragging && m.Moves == moves, "did not release");
                 });
                 Test("four fingers and palm are excluded", delegate {
@@ -179,23 +188,55 @@ namespace ThreeFingerWindowDrag
                     e.Process(f,20,false);
                     Check(m.Prepares == 0, "palm or four finger frame accepted");
                 });
+                Test("staggered four-finger input stays suppressed through partial lifts", delegate {
+                    var m = new FakeMover(); var e = new GestureEngine(m);
+                    e.Process(F(0,2),0,false);
+                    e.Process(F(0),5,false);
+                    e.Process(F(3),ConfirmMs - 1,false);
+                    e.Process(F(6,4),ConfirmMs + 1,false);
+                    e.Process(F(8),ConfirmMs + 10,false);
+                    e.Process(F(9,2),ConfirmMs + 20,false);
+                    e.Process(F(9,0,device:2),ConfirmMs + 21,false);
+                    e.Process(F(11),ConfirmMs + 30,false);
+                    e.Process(F(15),ConfirmMs * 3,false);
+                    Check(m.Captures == 0 && m.Moves == 0 && m.Finishes == 0, "four fingers started or finished a window gesture");
+                    Check(!e.Tracking && m.Prepares == 1, "partial lift restarted gesture tracking");
+
+                    ContactFrame released = F(15,4);
+                    foreach (Contact contact in released.Contacts) contact.Tip = false;
+                    e.Process(released,ConfirmMs * 3 + 10,false);
+                    e.Process(F(0),ConfirmMs * 3 + 20,false);
+                    e.Process(F(2),ConfirmMs * 4 + 20,false);
+                    Check(e.Dragging && m.Moves == 1 && m.X == 24, "three-finger drag did not recover after full lift");
+                });
+                Test("an active drag cancels when a fourth contact arrives and does not snap", delegate {
+                    var m = new FakeMover(); var e = new GestureEngine(m);
+                    e.Process(F(0),0,false);
+                    e.Process(F(3),ConfirmMs,false);
+                    var withPalm = F(6);
+                    withPalm.Contacts.Add(C(4, 30, 40, confidence:false));
+                    e.Process(withPalm,ConfirmMs + 10,false);
+                    e.Process(F(10),ConfirmMs * 2 + 20,false);
+                    e.Process(F(10,0),ConfirmMs * 2 + 30,false);
+                    Check(m.Moves == 1 && m.Releases == 1 && m.Finishes == 0 && !e.Dragging, "extra contact did not cancel the drag");
+                });
                 Test("contact ID replacement cancels instead of jumping", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); int moves = m.Moves;
-                    e.Process(F(2,3,10),20,false); e.Process(F(3,3,10),30,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); int moves = m.Moves;
+                    e.Process(F(2,3,10),ConfirmMs + 10,false); e.Process(F(3,3,10),ConfirmMs + 20,false);
                     Check(!e.Dragging && m.Moves == moves, "ID replacement moved window");
                 });
                 Test("Escape blocks gesture until fingers are lifted", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); int moves = m.Moves;
-                    e.Process(F(2),20,true); e.Process(F(3),30,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); int moves = m.Moves;
+                    e.Process(F(2),ConfirmMs + 10,true); e.Process(F(3),ConfirmMs + 20,false);
                     Check(m.Moves == moves && !e.Dragging, "Escape did not latch");
-                    e.Process(F(0,0),40,false); e.Process(F(0),50,false); e.Process(F(1),60,false);
+                    e.Process(F(0,0),ConfirmMs + 30,false); e.Process(F(0),ConfirmMs + 40,false); e.Process(F(1),ConfirmMs * 2 + 40,false);
                     Check(e.Dragging, "gesture never resumed");
                 });
                 Test("stale input timeout cancels", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); e.Tick(461);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); e.Tick(ConfirmMs + 451);
                     Check(!e.Dragging, "timeout did not release");
                 });
                 Test("pause and failed window operations stop movement", delegate {
@@ -203,14 +244,21 @@ namespace ThreeFingerWindowDrag
                     e.Process(F(0),0,false); e.Process(F(5),10,false);
                     Check(m.Moves == 0, "disabled moved window");
                     e.Enabled=true; e.Process(F(0,0),20,false); e.Process(F(0),30,false);
-                    m.Allow=false; e.Process(F(1),40,false);
+                    m.Allow=false; e.Process(F(1),30 + ConfirmMs,false);
                     Check(!e.Dragging, "capture failure ignored");
                 });
                 Test("input from another touchpad cannot hijack active gesture", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false);
-                    e.Process(F(10,3,0,2),20,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false);
+                    e.Process(F(10,3,0,2),ConfirmMs + 10,false);
                     Check(m.X == 12 && m.Prepares == 1, "other device hijacked gesture");
+                    e.Process(F(10,4,0,2),ConfirmMs + 20,false);
+                    e.Process(F(2),ConfirmMs + 30,false);
+                    Check(e.Dragging && m.X == 24 && m.Releases == 0, "extra contact on another device cancelled the active drag");
+                    e.Process(F(2,0),ConfirmMs + 40,false);
+                    e.Process(F(10,3,0,2),ConfirmMs + 50,false);
+                    e.Process(F(15,3,0,2),ConfirmMs * 2 + 50,false);
+                    Check(!e.Tracking && m.Prepares == 1, "other device began dragging before a full lift");
                 });
                 Test("fractional motion accumulates without rounding drift", delegate {
                     var m = new FakeMover(); var e = new GestureEngine(m) { ThresholdMm=0 };
@@ -265,7 +313,7 @@ namespace ThreeFingerWindowDrag
                                 Check(HidP_SetData(0,entries,ref fieldCount,preparsed,report,(uint)report.Length) == Native.HidSuccess,"native report set");
                                 ContactFrame parsed=d.Parse(report,frameNumber*10);
                                 Check(parsed != null && parsed.Contacts.Count(c=>c.Tip && c.Confident)==3,"actual descriptor decoding");
-                                e.Process(parsed,frameNumber*10,false);
+                                e.Process(parsed,frameNumber*ConfirmMs,false);
                             }
                             Check(e.Dragging && m.X > 0 && m.Y == 0,"native descriptor to movement pipeline");
                         }
@@ -299,13 +347,13 @@ namespace ThreeFingerWindowDrag
                 Test("installed settings and startup command paths", FeatureChecks.InstalledSettingsPath);
                 Test("only a normal finger release finishes a gesture", delegate {
                     var normal = new FakeMover(); var e = new GestureEngine(normal);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); e.Process(F(2,2),20,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); e.Process(F(2,2),ConfirmMs + 10,false);
                     Check(normal.Finishes == 1, "normal release did not finish");
                     var cancelled = new FakeMover(); e = new GestureEngine(cancelled);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); e.Process(F(2),20,true);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); e.Process(F(2),ConfirmMs + 10,true);
                     Check(cancelled.Finishes == 0, "Escape finished/maximized instead of cancelling");
                     var fourth = new FakeMover(); e = new GestureEngine(fourth);
-                    e.Process(F(0),0,false); e.Process(F(1),10,false); e.Process(F(2,4),20,false);
+                    e.Process(F(0),0,false); e.Process(F(1),ConfirmMs,false); e.Process(F(2,4),ConfirmMs + 10,false);
                     Check(fourth.Finishes == 0, "four-finger change finished/maximized");
                 });
                 Test("three-finger spread and contraction resize the same window", GestureFeatureChecks.PinchExpandsAndContracts);

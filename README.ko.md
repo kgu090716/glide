@@ -22,8 +22,8 @@ Windows 정밀 터치패드에서 **세 손가락으로 창을 옮기고, 크기
 
 | 파일 | 사용 방법 |
 | --- | --- |
-| `Glide-3.0.1-Setup.exe` | 설치 파일을 실행합니다. 로그인 시 자동 시작을 설치 중이나 앱의 **편의 기능**에서 설정할 수 있습니다. |
-| `ThreeFingerWindowDrag-portable.zip` | 압축 전체를 한 폴더에 푼 뒤 `ThreeFingerWindowDrag.exe`를 실행합니다. |
+| `Glide-3.0.2-Setup.exe` | 설치 파일을 실행합니다. 로그인 시 자동 시작을 설치 중이나 앱의 **편의 기능**에서 설정할 수 있습니다. |
+| `Glide-3.0.2-Portable.zip` | 압축 전체를 한 폴더에 푼 뒤 `ThreeFingerWindowDrag.exe`를 실행합니다. |
 
 두 파일에 .NET과 WinUI 런타임이 포함되어 있습니다.
 

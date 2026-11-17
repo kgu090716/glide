@@ -101,10 +101,10 @@ namespace ThreeFingerWindowDrag
         {
             var options = new DirectionalResizeOptions { Behavior = ResizeBehavior.LowerCorners };
             var mover = new FakeMover(); var engine = new GestureEngine(mover) { DirectionalResize = options };
-            engine.Process(Frame(), 0, false); engine.Process(Frame(2), 20, false);
+            engine.Process(Frame(), 0, false); engine.Process(Frame(2), GestureEngine.ThreeFingerConfirmationMs, false);
             Require(mover.Moves == 1 && mover.X == 24 && mover.EdgeResizes == 0, "normal drag was reversed");
             mover = new FakeMover(); engine = new GestureEngine(mover) { DirectionalResize = options };
-            engine.Process(Frame(), 0, false); engine.Process(Frame(scale: 1.2), 20, false);
+            engine.Process(Frame(), 0, false); engine.Process(Frame(scale: 1.2), GestureEngine.ThreeFingerConfirmationMs, false);
             Require(mover.Resizes == 1 && Math.Abs(mover.Scale - 1.2) < .00001 && mover.EdgeResizes == 0, "pinch was reversed");
             DirectionalResizeOptions snapshot = options.Snapshot(); options.Behavior = ResizeBehavior.Grow;
             Require(snapshot.Behavior == ResizeBehavior.LowerCorners, "behavior snapshot was shared");

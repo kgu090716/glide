@@ -44,10 +44,10 @@ namespace ThreeFingerWindowDrag
                 return result;
             }
             var move = new FakeMover(); var engine = new GestureEngine(move);
-            engine.Process(Frame(0, 1), 0, false); engine.Process(Frame(2, 1), 10, false);
+            engine.Process(Frame(0, 1), 0, false); engine.Process(Frame(2, 1), GestureEngine.ThreeFingerConfirmationMs, false);
             Require(move.Captures == 1 && move.RestoreSnap, "drag did not request unsnap");
             var pinch = new FakeMover(); engine = new GestureEngine(pinch);
-            engine.Process(Frame(0, 1), 0, false); engine.Process(Frame(0, 1.2), 10, false);
+            engine.Process(Frame(0, 1), 0, false); engine.Process(Frame(0, 1.2), GestureEngine.ThreeFingerConfirmationMs, false);
             Require(pinch.Resizes == 1 && !pinch.RestoreSnap, "pinch unexpectedly restored old size");
         }
         internal static void NativeRestoreAndCursor()

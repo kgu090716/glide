@@ -18,6 +18,8 @@ $env:NUGET_HTTP_CACHE_PATH = Join-Path $projectDirectory '.tools\http-cache'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
 $projectFile = Join-Path $projectDirectory 'modern\ThreeFingerWindowDrag.csproj'
+[xml]$project = Get-Content -LiteralPath $projectFile -Raw
+$appVersion = @($project.Project.PropertyGroup | Where-Object { $_.Version })[0].Version
 $testProject = Join-Path $projectDirectory 'tests\modern\CoreTests.csproj'
 & (Join-Path $projectDirectory 'make-icon.ps1')
 if (-not $SkipRestore) {
@@ -38,7 +40,7 @@ if ($LASTEXITCODE -ne 0) { throw 'WinUI 3 publish failed.' }
 $publishedExe = Join-Path $outputDirectory 'ThreeFingerWindowDrag.exe'
 if ($signer) { Add-GlideSignature $signer $TimestampUrl $publishedExe }
 Copy-Item -LiteralPath (Join-Path $projectDirectory 'README.md') -Destination (Join-Path $outputDirectory 'README.md') -Force
-$archivePath = Join-Path $projectDirectory 'ThreeFingerWindowDrag-portable.zip'
+$archivePath = Join-Path $projectDirectory "Glide-$appVersion-Portable.zip"
 $distributionFiles = Get-ChildItem -LiteralPath $outputDirectory | Where-Object { $_.Name -notin @('settings.ini', 'crash.log') }
 Compress-Archive -LiteralPath @($distributionFiles.FullName) -DestinationPath $archivePath -Force
 Write-Output "Published: $publishedExe"
